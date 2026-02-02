@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="NuistSmart.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NuistSmart"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="NuistSmart">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid>
+        <!-- 
+            Frame 鏄?WinUI 鐨勫鑸鍣紝鐢ㄤ簬鍦ㄤ笉鍚岄〉闈箣闂村垏鎹?
+            搴旂敤鍚姩鏃朵細鍏堝鑸埌 LoginPage
+            鐧诲綍鎴愬姛鍚庝細瀵艰埅鍒?ShellPage
+        -->
+        <Frame x:Name="AppFrame" />
+    </Grid>
+
+</Window>

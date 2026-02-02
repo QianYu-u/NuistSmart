@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NuistSmart (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "NuistSmart (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

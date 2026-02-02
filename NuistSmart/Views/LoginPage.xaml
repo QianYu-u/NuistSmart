@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NuistSmart.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NuistSmart.Views"
+    xmlns:viewmodels="using:NuistSmart.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+
+    <!-- 
+        设置 Page 的 DataContext 为 LoginViewModel
+        这样页面中的所有绑定都会从这个 ViewModel 获取数据
+    -->
+    <Page.DataContext>
+        <viewmodels:LoginViewModel />
+    </Page.DataContext>
+
+    <Grid>
+        <!-- 使用渐变背景让界面更美观 -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{ThemeResource SystemAccentColorLight2}" Offset="0.0" />
+                <GradientStop Color="{ThemeResource SystemAccentColorDark1}" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- 登录卡片 -->
+        <Border 
+            MaxWidth="400" 
+            MaxHeight="500"
+            CornerRadius="12"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            Padding="40"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+            <!-- 使用阴影效果让卡片有层次感 -->
+            <Border.Shadow>
+                <ThemeShadow />
+            </Border.Shadow>
+
+            <StackPanel Spacing="24">
+                
+                <!-- 标题区域 -->
+                <StackPanel Spacing="8" HorizontalAlignment="Center">
+                    <TextBlock 
+                        Text="??" 
+                        FontSize="48" 
+                        HorizontalAlignment="Center"/>
+                    <TextBlock 
+                        Text="南信大智能体" 
+                        FontSize="28" 
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"/>
+                    <TextBlock 
+                        Text="NuistSmart Campus Service" 
+                        FontSize="12" 
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- 输入框区域 -->
+                <StackPanel Spacing="16">
+                    
+                    <!-- 学号输入框 -->
+                    <!-- Text 属性双向绑定到 ViewModel 的 StudentId 属性 -->
+                    <!-- UpdateSourceTrigger=PropertyChanged 表示每次输入都立即更新 ViewModel -->
+                    <TextBox 
+                        x:Name="StudentIdTextBox"
+                        Header="学号"
+                        PlaceholderText="请输入学号（测试账号：admin）"
+                        Text="{x:Bind ViewModel.StudentId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                    <!-- 密码输入框 -->
+                    <!-- Password 属性绑定到 ViewModel 的 Password 属性 -->
+                    <PasswordBox 
+                        x:Name="PasswordBox"
+                        Header="密码"
+                        PlaceholderText="请输入密码（测试密码：123456）"
+                        Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                    <!-- 错误消息提示 -->
+                    <!-- 只有当 ErrorMessage 不为空时才显示 -->
+                    <InfoBar 
+                        Severity="Error"
+                        Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.ErrorMessage, Mode=OneWay, Converter={StaticResource StringToBooleanConverter}}"
+                        IsClosable="True"/>
+
+                </StackPanel>
+
+                <!-- 登录按钮和加载状态 -->
+                <StackPanel Spacing="12">
+                    
+                    <!-- 登录按钮 -->
+                    <!-- Command 绑定到 ViewModel 的 LoginCommand（由 [RelayCommand] 自动生成） -->
+                    <!-- IsEnabled 绑定到 !IsLoading，加载时禁用按钮 -->
+                    <Button 
+                        Content="登录"
+                        HorizontalAlignment="Stretch"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Command="{x:Bind ViewModel.LoginCommand}"
+                        IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                    <!-- 加载圈 -->
+                    <!-- IsActive 绑定到 ViewModel 的 IsLoading 属性 -->
+                    <!-- 只有在加载时才显示并激活 -->
+                    <ProgressRing 
+                        IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                        Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                        HorizontalAlignment="Center"/>
+
+                </StackPanel>
+
+                <!-- 提示信息 -->
+                <TextBlock 
+                    Text="提示：首次使用请使用测试账号登录"
+                    FontSize="12"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    HorizontalAlignment="Center"
+                    TextWrapping="Wrap"/>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
