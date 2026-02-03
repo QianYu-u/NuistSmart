@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Application
+﻿<Application
     x:Class="NuistSmart.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,21 +9,12 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
-            
-            <!-- 
-                鍏ㄥ眬璧勬簮锛氬€艰浆鎹㈠櫒
-                鍦?XAML 涓畾涔夎浆鎹㈠櫒瀹炰緥锛屽彲浠ュ湪鏁翠釜搴旂敤涓娇鐢?
-                閫氳繃 StaticResource 寮曠敤锛歿StaticResource InverseBooleanConverter}
-            -->
+
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <converters:StringToBooleanConverter x:Key="StringToBooleanConverter"/>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
-
-
         </ResourceDictionary>
     </Application.Resources>
-
 </Application>

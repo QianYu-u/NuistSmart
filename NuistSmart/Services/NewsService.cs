@@ -10,12 +10,17 @@ using System.Text.RegularExpressions;
 
 namespace NuistSmart.Services
 {
+    public class NewsResult
+    {
+        public List<NewsItem> Items { get; set; } = new();
+        public string NextPageUrl { get; set; } = string.Empty;
+    }
+
     public class NewsService
     {
         private readonly HttpClient _httpClient;
         private const string BaseUrl = "https://bulletin.nuist.edu.cn";
 
-        // 1. 【新增】分类映射表 (参考了你的 rssbulletin.txt)
         private readonly Dictionary<string, string> _categoryMap = new()
         {
             { "全部", "index.htm" },
@@ -47,30 +52,27 @@ namespace NuistSmart.Services
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36");
         }
 
-        // 2. 【修改】方法增加 category 参数
-        public async Task<List<NewsItem>> GetNewsListAsync(string category = "全部")
+        public async Task<NewsResult> GetNewsListAsync(string categoryOrUrl = "全部", bool isNextPage = false)
         {
+            var result = new NewsResult();
             try
             {
-                // 根据分类名获取对应的文件名，默认用 index.htm
-                string fileName = _categoryMap.ContainsKey(category) ? _categoryMap[category] : "index.htm";
-                string url = $"{BaseUrl}/{fileName}";
+                string url;
+                if (isNextPage) url = categoryOrUrl;
+                else
+                {
+                    string fileName = _categoryMap.ContainsKey(categoryOrUrl) ? _categoryMap[categoryOrUrl] : "index.htm";
+                    url = $"{BaseUrl}/{fileName}";
+                }
 
                 var responseBytes = await _httpClient.GetByteArrayAsync(url);
-
                 string htmlContent = Encoding.UTF8.GetString(responseBytes);
                 if (htmlContent.Count(c => c == '\uFFFD') > 50)
-                {
                     htmlContent = Encoding.GetEncoding("GBK").GetString(responseBytes);
-                }
 
                 int doctypeIndex = htmlContent.IndexOf("DOCTYPE");
-                if (doctypeIndex > 0)
-                {
-                    htmlContent = "<" + htmlContent.Substring(doctypeIndex);
-                }
+                if (doctypeIndex > 0) htmlContent = "<" + htmlContent.Substring(doctypeIndex);
 
-                var newsList = new List<NewsItem>();
                 var doc = new HtmlDocument();
                 doc.LoadHtml(htmlContent);
 
@@ -82,38 +84,57 @@ namespace NuistSmart.Services
                     foreach (var node in nodes)
                     {
                         var item = ParseNode(node);
-                        if (item != null) newsList.Add(item);
+                        if (item != null) result.Items.Add(item);
                     }
                 }
 
-                if (newsList.Count > 0)
+                var nextPageNode = doc.DocumentNode.SelectSingleNode("//a[contains(text(),'下页')]")
+                                ?? doc.DocumentNode.SelectSingleNode("//a[contains(text(),'下一页')]");
+
+                if (nextPageNode != null)
                 {
-                    return newsList
-                        .GroupBy(x => x.Title)
-                        .Select(g => g.First())
-                        .OrderByDescending(n => n.Date)
-                        .Take(20)
-                        .ToList();
+                    string nextHref = nextPageNode.GetAttributeValue("href", "");
+                    if (!string.IsNullOrEmpty(nextHref) && !nextHref.Contains("javascript"))
+                    {
+                        if (nextHref.StartsWith("http")) result.NextPageUrl = nextHref;
+                        else
+                        {
+                            var uri = new Uri(url);
+                            var path = uri.AbsolutePath;
+                            var directory = path.Substring(0, path.LastIndexOf('/') + 1);
+                            result.NextPageUrl = $"{uri.Scheme}://{uri.Host}{directory}{nextHref}";
+                        }
+                    }
                 }
 
-                return GetFallbackNews("该分类下暂无数据");
+                return result;
             }
-            catch (Exception ex)
-            {
-                return GetFallbackNews($"错误: {ex.Message}");
-            }
+            catch (Exception) { return result; }
         }
 
         private NewsItem? ParseNode(HtmlNode node)
         {
             try
             {
+                string innerHtml = node.InnerHtml.ToLower();
+
+                // 【核心修复】精准拦截置顶公告
+                // 根据你的源码：置顶公告包含 <span class="zdtb"> 和 top.jpg
+                // 只要发现这两个特征中的任何一个，直接杀掉！
+                if ( innerHtml.Contains("top.jpg") ||
+                    innerHtml.Contains("top.gif")) // 保留 .gif 以防万一
+                {
+                    return null;
+                }
+
                 var titleNode = node.SelectSingleNode(".//span[contains(@class,'btt')]//a");
                 if (titleNode == null) return null;
 
                 string title = titleNode.GetAttributeValue("title", "").Trim();
                 if (string.IsNullOrEmpty(title)) title = titleNode.InnerText.Trim();
-                if (title.StartsWith("[") && title.EndsWith("]")) return null;
+
+                // 二次拦截
+                if (title.Contains("置顶") || (title.StartsWith("[") && title.EndsWith("]"))) return null;
 
                 string href = titleNode.GetAttributeValue("href", "");
                 if (string.IsNullOrEmpty(href)) return null;
@@ -137,15 +158,10 @@ namespace NuistSmart.Services
                     Title = title,
                     Url = href,
                     Date = date,
-                    IsNew = node.InnerHtml.Contains("new.jpg") || node.InnerHtml.Contains("new.gif")
+                    IsNew = innerHtml.Contains("new.jpg") || innerHtml.Contains("new.gif")
                 };
             }
             catch { return null; }
-        }
-
-        private List<NewsItem> GetFallbackNews(string msg)
-        {
-            return new List<NewsItem> { new NewsItem { Title = msg, Date = "提示", IsNew = false } };
         }
     }
 }

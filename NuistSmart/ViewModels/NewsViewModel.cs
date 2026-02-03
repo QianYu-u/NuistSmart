@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using NuistSmart.Models;
 using NuistSmart.Services;
 using System.Collections.Generic;
+using System.Linq; // 【关键】引入 Linq 用于去重查找
 
 namespace NuistSmart.ViewModels
 {
@@ -14,13 +15,20 @@ namespace NuistSmart.ViewModels
     {
         private readonly NewsService _newsService;
 
+        private string _nextPageUrl = string.Empty;
+
         [ObservableProperty]
         private ObservableCollection<NewsItem> newsList = new();
 
         [ObservableProperty]
         private bool isLoading;
 
-        // 1. 【新增】分类列表数据源
+        [ObservableProperty]
+        private bool isLoadingMore;
+
+        [ObservableProperty]
+        private bool hasMoreData = false;
+
         public List<string> Categories { get; } = new()
         {
             "全部", "文件公告", "学术报告", "招标信息", "会议通知",
@@ -28,45 +36,77 @@ namespace NuistSmart.ViewModels
             "招生就业", "创新创业", "校园活动", "学院动态"
         };
 
-        // 2. 【新增】当前选中的分类
         [ObservableProperty]
         private string selectedCategory = "全部";
 
         public NewsViewModel()
         {
             _newsService = new NewsService();
-            // 启动时加载默认分类
             _ = LoadNewsAsync();
         }
 
-        // 3. 【新增】监听分类变化，自动刷新
-        // 当 SelectedCategory 属性改变时，这个方法会自动被调用
         async partial void OnSelectedCategoryChanged(string value)
         {
             await LoadNewsAsync();
         }
 
-        // 4. 【修改】加载新闻，支持刷新
         [RelayCommand]
         private async Task LoadNewsAsync()
         {
             if (IsLoading) return;
             IsLoading = true;
-            NewsList.Clear(); // 刷新前先清空，给用户一种正在刷新的感觉
+            NewsList.Clear();
+            HasMoreData = false;
 
             try
             {
-                // 传入当前选中的分类
-                var news = await _newsService.GetNewsListAsync(SelectedCategory);
+                var result = await _newsService.GetNewsListAsync(SelectedCategory, isNextPage: false);
 
-                foreach (var item in news)
+                foreach (var item in result.Items)
                 {
-                    NewsList.Add(item);
+                    // 【去重逻辑】如果列表里没有这条 URL，才添加
+                    // 这能完美解决置顶新闻在每一页都出现的问题
+                    if (!NewsList.Any(n => n.Url == item.Url))
+                    {
+                        NewsList.Add(item);
+                    }
                 }
+
+                _nextPageUrl = result.NextPageUrl;
+                HasMoreData = !string.IsNullOrEmpty(_nextPageUrl);
             }
             finally
             {
                 IsLoading = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task LoadMoreNewsAsync()
+        {
+            if (IsLoadingMore || string.IsNullOrEmpty(_nextPageUrl)) return;
+
+            IsLoadingMore = true;
+
+            try
+            {
+                var result = await _newsService.GetNewsListAsync(_nextPageUrl, isNextPage: true);
+
+                foreach (var item in result.Items)
+                {
+                    // 【去重逻辑】同样的判断，防止翻页时遇到重复的置顶内容
+                    if (!NewsList.Any(n => n.Url == item.Url))
+                    {
+                        NewsList.Add(item);
+                    }
+                }
+
+                _nextPageUrl = result.NextPageUrl;
+                HasMoreData = !string.IsNullOrEmpty(_nextPageUrl);
+            }
+            finally
+            {
+                IsLoadingMore = false;
             }
         }
 
