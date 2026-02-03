@@ -81,4 +81,30 @@ namespace NuistSmart.Converters
             return false;
         }
     }
+
+    /// <summary>
+    /// 反转布尔值到可见性转换器
+    /// 用途：true -> Collapsed, false -> Visible
+    /// 常用于加载状态相反的显示控制
+    /// </summary>
+    public class InverseBooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is bool boolValue)
+            {
+                return boolValue ? Visibility.Collapsed : Visibility.Visible;
+            }
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is Visibility visibility)
+            {
+                return visibility != Visibility.Visible;
+            }
+            return true;
+        }
+    }
 }

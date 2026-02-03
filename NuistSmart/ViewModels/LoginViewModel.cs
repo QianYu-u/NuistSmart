@@ -16,6 +16,7 @@ namespace NuistSmart.ViewModels
     public partial class LoginViewModel : ObservableObject
     {
         private readonly ILoginService _loginService;
+        private readonly IGithubService _githubService;
 
         // ============ 使用 [ObservableProperty] 源生成器特性 ============
         // 这个特性会自动生成：
@@ -49,20 +50,46 @@ namespace NuistSmart.ViewModels
         [ObservableProperty]
         private string errorMessage = string.Empty;
 
+        /// <summary>
+        /// 公告文本，从 GitHub 动态获取
+        /// </summary>
+        [ObservableProperty]
+        private string announcementText = "正在加载公告...";
+
         // ============ 登录成功事件 ============
         // 因为 ViewModel 不应该直接引用 View 或进行导航
         // 所以使用事件通知 View 层登录成功，由 View 负责导航
         public event EventHandler<User>? LoginSucceeded;
 
         // ============ 构造函数 ============
-        public LoginViewModel(ILoginService loginService)
+        public LoginViewModel(ILoginService loginService, IGithubService githubService)
         {
             _loginService = loginService;
+            _githubService = githubService;
+            
+            // 异步加载公告
+            _ = LoadAnnouncementAsync();
         }
 
         // 无参构造函数用于设计时数据绑定
-        public LoginViewModel() : this(new LoginService())
+        public LoginViewModel() : this(new LoginService(), new GithubService())
         {
+        }
+
+        /// <summary>
+        /// 异步加载公告内容
+        /// </summary>
+        private async Task LoadAnnouncementAsync()
+        {
+            try
+            {
+                AnnouncementText = await _githubService.GetAdvisoryAsync();
+            }
+            catch (Exception)
+            {
+                // 如果加载失败，显示默认消息
+                AnnouncementText = "欢迎使用 NuistSmart！";
+            }
         }
 
         // ============ 使用 [RelayCommand] 源生成器特性 ============

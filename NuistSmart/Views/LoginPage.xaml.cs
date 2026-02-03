@@ -1,6 +1,8 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using NuistSmart.ViewModels;
+using System;
+using Windows.System;
 
 namespace NuistSmart.Views
 {
@@ -44,6 +46,15 @@ namespace NuistSmart.Views
                 // 并传递用户信息作为参数
                 frame.Navigate(typeof(ShellPage), user);
             }
+        }
+
+        /// <summary>
+        /// 处理 GitHub 按钮点击事件
+        /// 使用系统默认浏览器打开项目主页
+        /// </summary>
+        private async void OnGitHubButtonClick(object sender, RoutedEventArgs e)
+        {
+            _ = await Launcher.LaunchUriAsync(new Uri("https://github.com/QianYu-u/NuistSmart"));
         }
     }
 }

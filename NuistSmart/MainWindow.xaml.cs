@@ -16,50 +16,83 @@ namespace NuistSmart
 
         public MainWindow()
         {
-            // [保留] 旧逻辑：初始化界面
             this.InitializeComponent();
 
-            // [新增] 获取当前窗口的控制权
+            // 扩展内容到标题栏，实现现代化布局
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(null);
+
+            // 获取当前窗口的控制权
             _appWindow = GetAppWindowForCurrentWindow();
 
-            // [新增] 启动时，强制把窗口变小（宽500，高750），适合登录页
-            _appWindow.Resize(new Windows.Graphics.SizeInt32(500, 750));
+            // 启动时，设置登录页窗口：固定宽屏尺寸 960x600，适配左右分栏布局
+            if (_appWindow.Presenter is OverlappedPresenter presenter)
+            {
+                presenter.IsMaximizable = false;
+                presenter.IsResizable = false;
+                presenter.IsMinimizable = true;
+            }
+            _appWindow.Resize(new Windows.Graphics.SizeInt32(960, 600));
+            CenterWindow();
 
-            // [新增] 监听：如果页面跳转了，我就看看要不要改变窗口大小
+            // 监听页面跳转事件，动态调整窗口状态
             AppFrame.Navigated += AppFrame_Navigated;
 
-            // [保留] 旧逻辑：让 Frame 导航到登录页
+            // 导航到登录页
             AppFrame.Navigate(typeof(LoginPage));
         }
 
         // [新增] 这是一个“事件处理函数”，每次页面跳转完成都会触发
         private void AppFrame_Navigated(object sender, NavigationEventArgs e)
         {
-            // 如果跳转到了主页 (ShellPage)，就把窗口最大化
+            if (_appWindow.Presenter is not OverlappedPresenter presenter)
+                return;
+
+            // 进入主页 (ShellPage)：恢复所有窗口功能，设置舒适的桌面尺寸
             if (e.SourcePageType == typeof(ShellPage))
             {
-                if (_appWindow.Presenter is OverlappedPresenter presenter)
-                {
-                    presenter.Maximize();
-                }
+                presenter.IsMaximizable = true;
+                presenter.IsResizable = true;
+                presenter.IsMinimizable = true;
+                presenter.Restore(true);
+                
+                _appWindow.Resize(new Windows.Graphics.SizeInt32(1200, 800));
+                CenterWindow();
             }
-            // 如果跳转回登录页，就把窗口变回小尺寸
+            // 返回登录页：禁止最大化和拉伸，固定宽屏尺寸适配左右分栏
             else if (e.SourcePageType == typeof(LoginPage))
             {
-                if (_appWindow.Presenter is OverlappedPresenter presenter)
-                {
-                    presenter.Restore(true);
-                }
-                _appWindow.Resize(new Windows.Graphics.SizeInt32(500, 750));
+                presenter.IsMaximizable = false;
+                presenter.IsResizable = false;
+                presenter.IsMinimizable = true;
+                presenter.Restore(true);
+                
+                _appWindow.Resize(new Windows.Graphics.SizeInt32(960, 600));
+                CenterWindow();
             }
         }
 
-        // [新增] 这是一个辅助工具函数，用来获取 AppWindow（微软写的标准写法，照抄即可）
+        // 获取 AppWindow 的辅助函数
         private AppWindow GetAppWindowForCurrentWindow()
         {
             IntPtr hWnd = WindowNative.GetWindowHandle(this);
             WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             return AppWindow.GetFromWindowId(wndId);
+        }
+
+        // 窗口居中显示的辅助函数
+        private void CenterWindow()
+        {
+            if (_appWindow == null) return;
+
+            var displayArea = DisplayArea.GetFromWindowId(_appWindow.Id, DisplayAreaFallback.Primary);
+            var workArea = displayArea.WorkArea;
+            var windowSize = _appWindow.Size;
+
+            var x = (workArea.Width - windowSize.Width) / 2 + workArea.X;
+            var y = (workArea.Height - windowSize.Height) / 2 + workArea.Y;
+
+            _appWindow.Move(new Windows.Graphics.PointInt32(x, y));
         }
     }
 }

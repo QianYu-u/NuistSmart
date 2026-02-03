@@ -61,24 +61,47 @@ namespace NuistSmart.Views
                         ShowPlaceholder("智能对话功能正在开发中...");
                         break;
 
-                    case "QueryPage":
-                        // TODO: 导航到教务查询页面
-                        // ContentFrame.Navigate(typeof(QueryPage));
-                        ShowPlaceholder("教务查询功能正在开发中...");
+                    case "NewsPage":
+                        // 导航到信息公告页面 (NewsPage)
+                        // 注意：这里必须确保 NewsPage.xaml 已经存在
+                        ContentFrame.Navigate(typeof(NuistSmart.Views.NewsPage));
                         break;
 
-                    case "AboutPage":
-                        // TODO: 导航到关于页面
-                        // ContentFrame.Navigate(typeof(AboutPage));
-                        ShowPlaceholder("关于页面正在开发中...");
+                    case "QueryPage":
+                        // TODO: 导航到信息公告页面
+                        // ContentFrame.Navigate(typeof(QueryPage));
+                        ShowPlaceholder("信息公告功能正在开发中...");
+                        break;
+
+                    case "BusPage":
+                        // TODO: 导航到校园巴士页面
+                        // ContentFrame.Navigate(typeof(BusPage));
+                        ShowPlaceholder("校园巴士功能正在开发中...");
+                        break;
+
+                    case "SchedulePage":
+                        // TODO: 导航到课程表页面
+                        // ContentFrame.Navigate(typeof(SchedulePage));
+                        ShowPlaceholder("课程表功能正在开发中...");
                         break;
                 }
             }
-            // 如果选中的是设置项
-            else if (args.IsSettingsSelected)
-            {
-                ShowPlaceholder("设置页面正在开发中...");
-            }
+        }
+
+        /// <summary>
+        /// 设置按钮点击事件
+        /// </summary>
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowPlaceholder("设置页面正在开发中...");
+        }
+
+        /// <summary>
+        /// 用户头像点击事件
+        /// </summary>
+        private void OnUserInfoClick(object sender, RoutedEventArgs e)
+        {
+            ShowPlaceholder("个人信息页面正在开发中...");
         }
 
         /// <summary>

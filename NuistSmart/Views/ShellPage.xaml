@@ -4,29 +4,109 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <!-- 根容器：两行布局，第一行是自定义标题栏，第二行是导航视图 -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 自定义标题栏区域（修复：高度改为 44，确保与系统按钮完美对齐） -->
+        <Grid Grid.Row="0" Background="{ThemeResource LayerFillColorDefaultBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <!-- Logo + 标题 -->
+                <ColumnDefinition Width="*"/>
+                <!-- 中间搜索框 -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- 右侧用户头像和图标 -->
+                <ColumnDefinition Width="138"/>
+                <!-- 避让系统按钮区域 -->
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧：Logo + 标题（垂直居中） -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                <FontIcon Glyph="&#xE80F;" FontSize="20" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Margin="0,0,12,0"/>
+                <TextBlock Text="NuistSmart" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- 中间：搜索框（修复：固定宽度 360，圆角胶囊样式，垂直居中） -->
+            <AutoSuggestBox 
+                Grid.Column="1"
+                x:Name="SearchBox"
+                PlaceholderText="搜索服务..."
+                QueryIcon="Find"
+                Width="360"
+                CornerRadius="18"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"/>
+
+            <!-- 右侧：用户头像 + 功能图标（修复：顶部对齐 + 4px 偏移，与系统按钮完美对齐） -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top" Spacing="12" Margin="0,4,12,0">
+                <!-- 消息图标 -->
+                <Button Style="{StaticResource SubtleButtonStyle}" Width="32" Height="32" Padding="0">
+                    <FontIcon Glyph="&#xE8BD;" FontSize="16"/>
+                </Button>
+                
+                <!-- 设置图标 -->
+                <Button x:Name="SettingsButton" Style="{StaticResource SubtleButtonStyle}" Width="32" Height="32" Padding="0" Click="SettingsButton_Click">
+                    <FontIcon Glyph="&#xE713;" FontSize="16"/>
+                </Button>
+
+                <!-- 用户头像 -->
+                <Button Background="Transparent" BorderThickness="0" Padding="0" CornerRadius="16" Click="OnUserInfoClick">
+                    <PersonPicture 
+                        x:Name="UserAvatar"
+                        Width="32" 
+                        Height="32"
+                        DisplayName="用户"/>
+                </Button>
+            </StackPanel>
+
+            <!-- 避让区（留给 Windows 系统按钮） -->
+            <Grid Grid.Column="3"/>
+        </Grid>
+
+        <!-- 导航视图 -->
         <NavigationView
+            Grid.Row="1"
             x:Name="MainNavigationView"
             IsBackButtonVisible="Collapsed"
-            IsSettingsVisible="True"
+            IsSettingsVisible="False"
+            PaneDisplayMode="Left"
+            IsPaneToggleButtonVisible="True"
             SelectionChanged="NavigationView_SelectionChanged">
 
             <NavigationView.MenuItems>
+                <!-- 智能对话 -->
                 <NavigationViewItem Content="智能对话" Tag="ChatPage">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8F2;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="教务查询" Tag="QueryPage">
+
+                <!-- 信息公告 -->
+                <NavigationViewItem Content="信息公告" Tag="NewsPage">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8F3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="关于" Tag="AboutPage">
+
+
+                <!-- 校园巴士 -->
+                <NavigationViewItem Content="校园巴士" Tag="BusPage">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE946;"/>
+                        <FontIcon Glyph="&#xE7C8;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- 课程表 -->
+                <NavigationViewItem Content="课程表" Tag="SchedulePage">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE787;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
@@ -41,7 +121,9 @@
                 </StackPanel>
             </NavigationView.PaneFooter>
 
+            <!-- 内容区域 -->
             <Frame x:Name="ContentFrame"/>
         </NavigationView>
     </Grid>
 </Page>
+

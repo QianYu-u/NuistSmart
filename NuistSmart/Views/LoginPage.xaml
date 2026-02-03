@@ -8,127 +8,224 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="Transparent">
 
-
-    <!-- 
-        设置 Page 的 DataContext 为 LoginViewModel
-        这样页面中的所有绑定都会从这个 ViewModel 获取数据
-    -->
+    <!-- 设置 Page 的 DataContext 为 LoginViewModel -->
     <Page.DataContext>
         <viewmodels:LoginViewModel />
     </Page.DataContext>
 
+    <!-- 主容器：两行布局（主内容区 + 底部栏），带半透明灰色蒙版 -->
     <Grid>
-        <!-- 使用渐变背景让界面更美观 -->
+        <!-- 全屏半透明蒙版，营造磨砂玻璃质感 -->
         <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="{ThemeResource SystemAccentColorLight2}" Offset="0.0" />
-                <GradientStop Color="{ThemeResource SystemAccentColorDark1}" Offset="1.0" />
-            </LinearGradientBrush>
+            <SolidColorBrush Color="#000000" Opacity="0.15"/>
         </Grid.Background>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <!-- 登录卡片 -->
-        <Border 
-            MaxWidth="400" 
-            MaxHeight="500"
-            CornerRadius="12"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-            BorderThickness="1"
-            Padding="40"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+        <!-- ============ Row 0: 主内容区（左右分栏：4* 和 6*） ============ -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="6*"/>
+            </Grid.ColumnDefinitions>
 
-            <!-- 使用阴影效果让卡片有层次感 -->
-            <Border.Shadow>
-                <ThemeShadow />
-            </Border.Shadow>
-
-            <StackPanel Spacing="24">
-                
-                <!-- 标题区域 -->
-                <StackPanel Spacing="8" HorizontalAlignment="Center">
-                    <TextBlock 
-                        Text="??" 
-                        FontSize="48" 
-                        HorizontalAlignment="Center"/>
-                    <TextBlock 
-                        Text="南信大智能体" 
-                        FontSize="28" 
-                        FontWeight="Bold"
-                        HorizontalAlignment="Center"/>
-                    <TextBlock 
-                        Text="NuistSmart Campus Service" 
-                        FontSize="12" 
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        HorizontalAlignment="Center"/>
-                </StackPanel>
-
-                <!-- 输入框区域 -->
-                <StackPanel Spacing="16">
-                    
-                    <!-- 学号输入框 -->
-                    <!-- Text 属性双向绑定到 ViewModel 的 StudentId 属性 -->
-                    <!-- UpdateSourceTrigger=PropertyChanged 表示每次输入都立即更新 ViewModel -->
-                    <TextBox 
-                        x:Name="StudentIdTextBox"
-                        Header="学号"
-                        PlaceholderText="请输入学号（测试账号：admin）"
-                        Text="{x:Bind ViewModel.StudentId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
-
-                    <!-- 密码输入框 -->
-                    <!-- Password 属性绑定到 ViewModel 的 Password 属性 -->
-                    <PasswordBox 
-                        x:Name="PasswordBox"
-                        Header="密码"
-                        PlaceholderText="请输入密码（测试密码：123456）"
-                        Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
-
-                    <!-- 错误消息提示 -->
-                    <!-- 只有当 ErrorMessage 不为空时才显示 -->
-                    <InfoBar 
-                        Severity="Error"
-                        Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
-                        IsOpen="{x:Bind ViewModel.ErrorMessage, Mode=OneWay, Converter={StaticResource StringToBooleanConverter}}"
-                        IsClosable="True"/>
-
-                </StackPanel>
-
-                <!-- 登录按钮和加载状态 -->
-                <StackPanel Spacing="12">
-                    
-                    <!-- 登录按钮 -->
-                    <!-- Command 绑定到 ViewModel 的 LoginCommand（由 [RelayCommand] 自动生成） -->
-                    <!-- IsEnabled 绑定到 !IsLoading，加载时禁用按钮 -->
-                    <Button 
-                        Content="登录"
-                        HorizontalAlignment="Stretch"
-                        Style="{StaticResource AccentButtonStyle}"
-                        Command="{x:Bind ViewModel.LoginCommand}"
-                        IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
-
-                    <!-- 加载圈 -->
-                    <!-- IsActive 绑定到 ViewModel 的 IsLoading 属性 -->
-                    <!-- 只有在加载时才显示并激活 -->
-                    <ProgressRing 
-                        IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                        HorizontalAlignment="Center"/>
-
-                </StackPanel>
-
-                <!-- 提示信息 -->
-                <TextBlock 
-                    Text="提示：首次使用请使用测试账号登录"
-                    FontSize="12"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            <!-- ============ 左侧展示区：Logo + 标题 + 动态公告栏 ============ -->
+            <Grid Grid.Column="0">
+                <StackPanel 
+                    VerticalAlignment="Center" 
                     HorizontalAlignment="Center"
-                    TextWrapping="Wrap"/>
+                    Spacing="12" 
+                    Padding="40">
+                    
+                    <!-- Logo 图片 -->
+                    <Image 
+                        Source="ms-appx:///Assets/NuistLogo.png"
+                        Width="90"
+                        Height="90"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center"/>
+                    
+                    <!-- 标题 -->
+                    <TextBlock 
+                        Text="NuistSmart"
+                        FontSize="36"
+                        FontWeight="Bold"
+                        HorizontalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
 
-            </StackPanel>
-        </Border>
+                    <!-- 动态公告栏（半透明圆角卡片） -->
+                    <Border 
+                        Background="{ThemeResource LayerFillColorDefaultBrush}"
+                        CornerRadius="12"
+                        Padding="24"
+                        MaxWidth="400"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                        
+                        <StackPanel Spacing="12">
+                            <TextBlock 
+                                Text="📢 系统公告"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                            
+                            <ScrollViewer 
+                                MaxHeight="180"
+                                VerticalScrollBarVisibility="Auto"
+                                HorizontalScrollBarVisibility="Disabled">
+                                <TextBlock 
+                                    Text="{x:Bind ViewModel.AnnouncementText, Mode=OneWay}"
+                                    TextWrapping="Wrap"
+                                    FontSize="13"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    LineHeight="22"/>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!-- ============ 右侧登录区：白色圆角卡片（等高：固定高度 480） ============ -->
+            <Grid Grid.Column="1">
+                <Border 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Width="360"
+                    Height="480"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="8"
+                    Padding="40"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1">
+                    
+                    <Border.Shadow>
+                        <ThemeShadow />
+                    </Border.Shadow>
+                    
+                    <StackPanel Spacing="20" VerticalAlignment="Center">
+                        
+                        <!-- 表单标题 -->
+                        <StackPanel Spacing="8">
+                            <TextBlock 
+                                Text="登录"
+                                FontSize="28"
+                                FontWeight="Bold"
+                                Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                            <TextBlock 
+                                Text="使用您的学号和密码登录系统"
+                                FontSize="13"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <!-- 输入框区域（关键修复：固定宽度 280） -->
+                        <StackPanel Spacing="16" HorizontalAlignment="Center">
+                            
+                            <!-- 学号输入框（固定宽度 280，防止撑大窗口） -->
+                            <TextBox 
+                                x:Name="StudentIdTextBox"
+                                Header="学号"
+                                PlaceholderText="请输入学号（测试：admin）"
+                                Width="280"
+                                HorizontalAlignment="Center"
+                                Text="{x:Bind ViewModel.StudentId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                            <!-- 密码输入框（固定宽度 280，禁用显示按钮防止抖动） -->
+                            <PasswordBox 
+                                x:Name="PasswordBox"
+                                Header="密码"
+                                PlaceholderText="请输入密码（测试：123456）"
+                                Width="280"
+                                HorizontalAlignment="Center"
+                                Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                IsPasswordRevealButtonEnabled="False"
+                                IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                            <!-- 错误消息提示 -->
+                            <InfoBar 
+                                Severity="Error"
+                                Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                                IsOpen="{x:Bind ViewModel.ErrorMessage, Mode=OneWay, Converter={StaticResource StringToBooleanConverter}}"
+                                IsClosable="True"
+                                Width="280"/>
+                        </StackPanel>
+
+                        <!-- 登录按钮和加载状态 -->
+                        <StackPanel Spacing="16" HorizontalAlignment="Center">
+                            
+                            <!-- 登录按钮（固定宽度 280，与输入框对齐） -->
+                            <Button 
+                                Content="登录"
+                                Width="280"
+                                Height="40"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Command="{x:Bind ViewModel.LoginCommand}"
+                                IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                            <!-- 加载圈 -->
+                            <ProgressRing 
+                                IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                                Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                                HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- 提示信息 -->
+                        <TextBlock 
+                            Text="首次使用请使用测试账号登录"
+                            FontSize="12"
+                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                            HorizontalAlignment="Center"
+                            TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- ============ Row 1: 底部栏 ============ -->
+        <Grid 
+            Grid.Row="1" 
+            Height="38"
+            Background="{ThemeResource LayerFillColorDefaultBrush}"
+            Padding="20,0">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左下角：版本号 -->
+            <TextBlock 
+                Grid.Column="0"
+                Text="Version 1.0.0"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+            <!-- 右下角：GitHub 链接 -->
+            <Button
+                Grid.Column="1"
+                Background="Transparent"
+                BorderThickness="0"
+                VerticalAlignment="Center"
+                Padding="8,4"
+                Click="OnGitHubButtonClick">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <FontIcon 
+                        Glyph="&#xE71B;" 
+                        FontSize="14"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock 
+                        Text="GitHub" 
+                        FontSize="12"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+            </Button>
+        </Grid>
     </Grid>
 </Page>
