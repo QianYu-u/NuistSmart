@@ -8,10 +8,6 @@
     xmlns:viewmodels="using:NuistSmart.ViewModels"
     mc:Ignorable="d">
 
-    <Page.DataContext>
-        <viewmodels:NewsViewModel />
-    </Page.DataContext>
-
     <Grid Padding="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

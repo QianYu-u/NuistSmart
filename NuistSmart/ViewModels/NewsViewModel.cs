@@ -7,13 +7,14 @@ using CommunityToolkit.Mvvm.Input;
 using NuistSmart.Models;
 using NuistSmart.Services;
 using System.Collections.Generic;
-using System.Linq; // 【关键】引入 Linq 用于去重查找
+using System.Linq;
 
 namespace NuistSmart.ViewModels
 {
     public partial class NewsViewModel : ObservableObject
     {
         private readonly NewsService _newsService;
+        private readonly DbService _dbService; // 数据库服务
 
         private string _nextPageUrl = string.Empty;
 
@@ -39,8 +40,9 @@ namespace NuistSmart.ViewModels
         [ObservableProperty]
         private string selectedCategory = "全部";
 
-        public NewsViewModel()
+        public NewsViewModel(DbService dbService)
         {
+            _dbService = dbService;
             _newsService = new NewsService();
             _ = LoadNewsAsync();
         }
@@ -64,13 +66,16 @@ namespace NuistSmart.ViewModels
 
                 foreach (var item in result.Items)
                 {
-                    // 【去重逻辑】如果列表里没有这条 URL，才添加
-                    // 这能完美解决置顶新闻在每一页都出现的问题
+                    // 1. 更新 UI 列表
                     if (!NewsList.Any(n => n.Url == item.Url))
                     {
                         NewsList.Add(item);
                     }
                 }
+
+                // 【核心修改】拿到数据后，立刻存入数据库！
+                // 这样不管点不点开，标题和日期都记住了。
+                SaveListToDatabase(result.Items);
 
                 _nextPageUrl = result.NextPageUrl;
                 HasMoreData = !string.IsNullOrEmpty(_nextPageUrl);
@@ -85,7 +90,6 @@ namespace NuistSmart.ViewModels
         private async Task LoadMoreNewsAsync()
         {
             if (IsLoadingMore || string.IsNullOrEmpty(_nextPageUrl)) return;
-
             IsLoadingMore = true;
 
             try
@@ -94,12 +98,15 @@ namespace NuistSmart.ViewModels
 
                 foreach (var item in result.Items)
                 {
-                    // 【去重逻辑】同样的判断，防止翻页时遇到重复的置顶内容
+                    // 1. 更新 UI
                     if (!NewsList.Any(n => n.Url == item.Url))
                     {
                         NewsList.Add(item);
                     }
                 }
+
+                // 【核心修改】加载更多时，也立刻存入数据库！
+                SaveListToDatabase(result.Items);
 
                 _nextPageUrl = result.NextPageUrl;
                 HasMoreData = !string.IsNullOrEmpty(_nextPageUrl);
@@ -110,11 +117,55 @@ namespace NuistSmart.ViewModels
             }
         }
 
+        /// <summary>
+        /// 将列表数据批量存入 LiteDB
+        /// </summary>
+        private void SaveListToDatabase(List<NewsItem> items)
+        {
+            // 为了不卡顿 UI，我们用 Task.Run 在后台线程做存储
+            Task.Run(() =>
+            {
+                try
+                {
+                    int count = 0;
+                    foreach (var item in items)
+                    {
+                        // 1. 先查库，如果已经存在，就跳过
+                        // (防止覆盖掉之前可能已经下载好的“正文内容”)
+                        var existing = _dbService.GetNews(item.Url);
+
+                        if (existing == null)
+                        {
+                            // 2. 只有库里没有这条新闻时，才存入
+                            var cache = new NewsDetailCache
+                            {
+                                Url = item.Url,
+                                Title = item.Title,
+                                Date = item.Date,
+                                Content = "", // 列表页没有正文，先留空
+                                CreateTime = DateTime.Now
+                            };
+                            _dbService.SaveNews(cache);
+                            count++;
+                        }
+                    }
+                    // 调试输出，方便你知道存了多少
+                    System.Diagnostics.Debug.WriteLine($"[LiteDB] 自动归档完成，新存入 {count} 条新闻目录。");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[LiteDB] 存储失败: {ex.Message}");
+                }
+            });
+        }
+
         [RelayCommand]
         private async Task OpenLinkAsync(NewsItem item)
         {
             if (item != null && !string.IsNullOrEmpty(item.Url))
             {
+                // 点击时依然可以去完善正文（可选，为了更丰富的数据）
+                // 但基础的标题和日期，在列表加载时就已经存好了。
                 await Launcher.LaunchUriAsync(new Uri(item.Url));
             }
         }
