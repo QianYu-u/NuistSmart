@@ -71,6 +71,11 @@ namespace NuistSmart
              services.AddTransient<NewsViewModel>();
              services.AddTransient<ChatViewModel>();
              services.AddSingleton<ShellViewModel>();
+
+             // 校园巴士功能相关依赖注入
+             services.AddTransient<TokenCaptureService>();
+             services.AddSingleton<BusService>();
+             services.AddTransient<BusViewModel>();
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -39,6 +39,7 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+		<PackageReference Include="Titanium.Web.Proxy" Version="3.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -54,6 +55,9 @@
 		<None Update="Views\ShellPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
+		<None Update="Views\BusPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -61,6 +65,9 @@
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 		<Page Update="Views\NewsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\BusPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>

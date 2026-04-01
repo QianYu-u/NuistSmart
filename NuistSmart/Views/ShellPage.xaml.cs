@@ -81,9 +81,8 @@ namespace NuistSmart.Views
                         break;
 
                     case "BusPage":
-                        // TODO: 导航到校园巴士页面
-                        // ContentFrame.Navigate(typeof(BusPage));
-                        ShowPlaceholder("校园巴士功能正在开发中...");
+                        // 导航到校园巴士页面
+                        ContentFrame.Navigate(typeof(NuistSmart.Views.BusPage));
                         break;
 
                     case "SchedulePage":
