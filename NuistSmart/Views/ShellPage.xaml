@@ -88,6 +88,13 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+                <!-- 校历假期 -->
+                <NavigationViewItem Content="校历假期" Tag="CalendarPage">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE787;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
                 <!-- 信息公告 -->
                 <NavigationViewItem Content="信息公告" Tag="NewsPage">
                     <NavigationViewItem.Icon>

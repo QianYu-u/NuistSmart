@@ -1,0 +1,11 @@
+  ???????????
+  ???????????????
+C:\Users\death\.nuget\packages\microsoft.windowsappsdk.winui\1.8.251222000\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets(594,9): error MSB3073: ???"C:\Users\death\.nuget\packages\microsoft.windowsappsdk.winui\1.8.251222000\buildTransitive\..\tools\net6.0\..\net472\XamlCompiler.exe" "obj\ARM64\Debug\net8.0-windows10.0.19041.0\win-arm64\\input.json" "obj\ARM64\Debug\net8.0-windows10.0.19041.0\win-arm64\\output.json"???????? 1? [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+
+?????
+
+C:\Users\death\.nuget\packages\microsoft.windowsappsdk.winui\1.8.251222000\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets(594,9): error MSB3073: ???"C:\Users\death\.nuget\packages\microsoft.windowsappsdk.winui\1.8.251222000\buildTransitive\..\tools\net6.0\..\net472\XamlCompiler.exe" "obj\ARM64\Debug\net8.0-windows10.0.19041.0\win-arm64\\input.json" "obj\ARM64\Debug\net8.0-windows10.0.19041.0\win-arm64\\output.json"???????? 1? [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+    0 ???
+    1 ???
+
+???? 00:00:04.48

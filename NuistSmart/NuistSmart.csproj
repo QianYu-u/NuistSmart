@@ -37,11 +37,14 @@
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260101001" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="HtmlAgilityPack" Version="1.11.71" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Views\CalendarPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</None>
 		<None Update="Views\NewsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</None>
@@ -54,6 +57,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Page Update="Views\CalendarPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Views\NewsPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>

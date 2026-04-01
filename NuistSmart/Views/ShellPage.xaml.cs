@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using NuistSmart.Models;
@@ -15,7 +16,9 @@ namespace NuistSmart.Views
         public ShellPage()
         {
             this.InitializeComponent();
-            ViewModel = new ShellViewModel();
+            
+            // 从 DI 容器获取 ViewModel
+            ViewModel = App.ServiceProvider.GetRequiredService<ShellViewModel>();
 
             // 默认选中第一个菜单项（智能对话）
             MainNavigationView.SelectedItem = MainNavigationView.MenuItems[0];
@@ -59,6 +62,11 @@ namespace NuistSmart.Views
                         // TODO: 导航到智能对话页面
                         // ContentFrame.Navigate(typeof(ChatPage));
                         ShowPlaceholder("智能对话功能正在开发中...");
+                        break;
+
+                    case "CalendarPage":
+                        // 导航到校历假期页面
+                        ContentFrame.Navigate(typeof(NuistSmart.Views.CalendarPage));
                         break;
 
                     case "NewsPage":

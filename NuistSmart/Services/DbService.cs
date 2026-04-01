@@ -1,8 +1,10 @@
 using LiteDB;
 using NuistSmart.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Windows.Storage;
 
 namespace NuistSmart.Services;
@@ -143,6 +145,89 @@ public class DbService
         {
             Debug.WriteLine($"[DbService] 更新摘要失败: {ex.Message}");
             return false;
+        }
+    }
+
+    /// <summary>
+    /// 批量保存或更新假期数据
+    /// </summary>
+    /// <param name="holidays">假期列表</param>
+    public void SaveHolidays(List<HolidayItem> holidays)
+    {
+        try
+        {
+            if (_db == null)
+            {
+                Debug.WriteLine("[DbService] 数据库未初始化，请先调用 Init()");
+                return;
+            }
+
+            var col = _db.GetCollection<HolidayItem>("holidays");
+            
+            // 批量插入或更新 (Upsert)
+            col.Upsert(holidays);
+            
+            Debug.WriteLine($"[DbService] 成功存入 {holidays.Count} 条假期数据");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[DbService] 保存假期失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 查询指定年月的所有假期
+    /// </summary>
+    /// <param name="year">年份</param>
+    /// <param name="month">月份</param>
+    /// <returns>假期列表</returns>
+    public List<HolidayItem> GetHolidaysByMonth(int year, int month)
+    {
+        try
+        {
+            if (_db == null)
+            {
+                Debug.WriteLine("[DbService] 数据库未初始化，请先调用 Init()");
+                return new List<HolidayItem>();
+            }
+
+            var col = _db.GetCollection<HolidayItem>("holidays");
+
+            // 查询指定月份的假期
+            var results = col.Find(h => h.Date.Year == year && h.Date.Month == month);
+            return new List<HolidayItem>(results);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[DbService] 查询假期失败: {ex.Message}");
+            return new List<HolidayItem>();
+        }
+    }
+
+    /// <summary>
+    /// 查询指定日期的假期信息
+    /// </summary>
+    /// <param name="date">日期</param>
+    /// <returns>假期信息，如果不是假期则返回 null</returns>
+    public HolidayItem? GetHolidayByDate(DateTime date)
+    {
+        try
+        {
+            if (_db == null)
+            {
+                Debug.WriteLine("[DbService] 数据库未初始化，请先调用 Init()");
+                return null;
+            }
+
+            var col = _db.GetCollection<HolidayItem>("holidays");
+            var dateKey = date.ToString("yyyy-MM-dd");
+            
+            return col.FindById(dateKey);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[DbService] 查询假期失败: {ex.Message}");
+            return null;
         }
     }
 

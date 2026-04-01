@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NuistSmart.Models;
+using NuistSmart.Services;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace NuistSmart.ViewModels
 {
@@ -9,6 +12,9 @@ namespace NuistSmart.ViewModels
     /// </summary>
     public partial class ShellViewModel : ObservableObject
     {
+        private readonly CalendarService _calendarService;
+        private readonly DbService _dbService;
+
         /// <summary>
         /// 当前登录的用户信息
         /// 使用 [ObservableProperty] 自动生成属性变化通知
@@ -22,8 +28,10 @@ namespace NuistSmart.ViewModels
         [ObservableProperty]
         private string welcomeMessage = "欢迎使用南信大智能体";
 
-        public ShellViewModel()
+        public ShellViewModel(CalendarService calendarService, DbService dbService)
         {
+            _calendarService = calendarService;
+            _dbService = dbService;
         }
 
         /// <summary>
@@ -34,6 +42,35 @@ namespace NuistSmart.ViewModels
         {
             CurrentUser = user;
             WelcomeMessage = $"欢迎，{user.Name} ({user.StudentId})";
+        }
+
+        /// <summary>
+        /// 更新校历数据
+        /// 从教务系统抓取假期信息并存入数据库
+        /// </summary>
+        public async Task UpdateCalendarAsync()
+        {
+            try
+            {
+                Debug.WriteLine("[ShellViewModel] 开始更新校历数据...");
+                
+                var holidays = await _calendarService.FetchHolidaysAsync();
+                
+                if (holidays.Count > 0)
+                {
+                    Debug.WriteLine($"[ShellViewModel] 获取到 {holidays.Count} 条假期数据，准备保存...");
+                    _dbService.SaveHolidays(holidays);
+                    Debug.WriteLine("[ShellViewModel] 校历数据更新完成");
+                }
+                else
+                {
+                    Debug.WriteLine("[ShellViewModel] 未获取到假期数据");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine($"[ShellViewModel] 更新校历失败: {ex.Message}");
+            }
         }
     }
 }

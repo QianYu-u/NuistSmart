@@ -1,0 +1,104 @@
+<Page
+    x:Class="NuistSmart.Views.CalendarPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <TextBlock 
+            Grid.Row="0"
+            Text="校历假期"
+            FontSize="28"
+            FontWeight="Bold"
+            Margin="0,0,0,16"/>
+
+        <!-- 刷新按钮和状态 -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12" Margin="0,0,0,16">
+            <Button 
+                x:Name="RefreshButton"
+                Click="RefreshButton_Click">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                    <TextBlock Text="刷新假期数据" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            
+            <ProgressRing 
+                x:Name="LoadingRing"
+                Width="24"
+                Height="24"
+                IsActive="False"
+                Visibility="Collapsed"/>
+            
+            <TextBlock 
+                x:Name="StatusText"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource SystemAccentColor}"/>
+        </StackPanel>
+
+        <!-- 假期列表 -->
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl x:Name="HolidaysItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border 
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            CornerRadius="8"
+                            Padding="16"
+                            Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 日期 -->
+                                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                    <TextBlock 
+                                        Text="{Binding DateText}"
+                                        FontSize="16"
+                                        FontWeight="SemiBold"/>
+                                    <TextBlock 
+                                        Text="{Binding DayOfWeekText}"
+                                        FontSize="12"
+                                        Opacity="0.7"/>
+                                </StackPanel>
+
+                                <!-- 假期名称 -->
+                                <TextBlock 
+                                    Grid.Column="1"
+                                    Text="{Binding Name}"
+                                    FontSize="16"
+                                    VerticalAlignment="Center"/>
+
+                                <!-- 长假标记 -->
+                                <Border 
+                                    Grid.Column="2"
+                                    Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                    CornerRadius="4"
+                                    Padding="8,4"
+                                    Visibility="{Binding LongVacationVisibility}">
+                                    <TextBlock 
+                                        Text="长假"
+                                        FontSize="12"
+                                        Foreground="White"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Page>

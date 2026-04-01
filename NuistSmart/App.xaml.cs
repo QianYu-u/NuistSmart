@@ -62,9 +62,13 @@ namespace NuistSmart
             // 注册数据库服务为单例
             services.AddSingleton<DbService>();
 
+            // 注册校历服务为单例
+            services.AddSingleton<CalendarService>();
+
             // 在这里注册其他服务和 ViewModels
 
              services.AddTransient<NewsViewModel>();
+             services.AddSingleton<ShellViewModel>();
         }
 
         /// <summary>
