@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -65,9 +65,11 @@ namespace NuistSmart
             // 注册校历服务为单例
             services.AddSingleton<CalendarService>();
 
-            // 在这里注册其他服务和 ViewModels
+            // 注册 AI 服务为单例
+            services.AddSingleton<AiService>();
 
              services.AddTransient<NewsViewModel>();
+             services.AddTransient<ChatViewModel>();
              services.AddSingleton<ShellViewModel>();
         }
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -59,9 +59,8 @@ namespace NuistSmart.Views
                 switch (tag)
                 {
                     case "ChatPage":
-                        // TODO: 导航到智能对话页面
-                        // ContentFrame.Navigate(typeof(ChatPage));
-                        ShowPlaceholder("智能对话功能正在开发中...");
+                        // 导航到智能对话页面
+                        ContentFrame.Navigate(typeof(NuistSmart.Views.ChatPage));
                         break;
 
                     case "CalendarPage":

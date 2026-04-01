@@ -232,6 +232,48 @@ public class DbService
     }
 
     /// <summary>
+    /// 获取最近 N 天内的公告缓存列表
+    /// </summary>
+    /// <param name="days">天数</param>
+    /// <returns>公告列表</returns>
+    public List<NewsDetailCache> GetRecentNews(int days = 30)
+    {
+        try
+        {
+            if (_db == null)
+            {
+                Debug.WriteLine("[DbService] 数据库未初始化，请先调用 Init()");
+                return new List<NewsDetailCache>();
+            }
+
+            var collection = _db.GetCollection<NewsDetailCache>(CollectionName);
+            var all = collection.FindAll().ToList();
+
+            // 尝试按日期字符串筛选最近 N 天
+            var cutoff = DateTime.Now.AddDays(-days).ToString("yyyy-MM-dd");
+            var recent = all
+                .Where(n => string.Compare(n.Date, cutoff, StringComparison.Ordinal) >= 0)
+                .OrderByDescending(n => n.Date)
+                .ToList();
+
+            // 如果按日期筛选结果为空（可能日期格式不一致），返回全部数据
+            if (recent.Count == 0)
+            {
+                Debug.WriteLine($"[DbService] 按日期筛选无结果，返回全部 {all.Count} 条");
+                return all.OrderByDescending(n => n.Date).ToList();
+            }
+
+            Debug.WriteLine($"[DbService] 查询到最近 {days} 天公告 {recent.Count} 条");
+            return recent;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[DbService] 查询近期公告失败: {ex.Message}");
+            return new List<NewsDetailCache>();
+        }
+    }
+
+    /// <summary>
     /// 释放数据库资源
     /// </summary>
     public void Dispose()

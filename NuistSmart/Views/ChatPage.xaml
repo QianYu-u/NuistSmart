@@ -1,0 +1,77 @@
+<Page
+    x:Class="NuistSmart.Views.ChatPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,24">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <FontIcon Glyph="&#xE8F2;" FontSize="24" Foreground="{ThemeResource SystemAccentColor}" VerticalAlignment="Center"/>
+                <TextBlock Text="智能对话" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
+            </StackPanel>
+            <TextBlock Text="在这里询问关于校园公告的信息。例如：“昨天有什么新公告？”" 
+                       Style="{ThemeResource BodyTextBlockStyle}" 
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+        </StackPanel>
+
+        <!-- 提示栏 -->
+        <InfoBar Grid.Row="1" IsOpen="True" Severity="Informational" Title="提示"
+                 Message="AI 助手的信息来源于本地数据库，请先在“信息公告”页面刷新以获取最新缓存。"
+                 Margin="0,0,0,24"/>
+
+        <!-- AI 回答展示 -->
+        <ScrollViewer Grid.Row="2" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                      CornerRadius="8" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                      Padding="20">
+            <StackPanel Spacing="16">
+                <!-- 加载中 -->
+                <StackPanel Orientation="Horizontal" Spacing="12"
+                            Visibility="{x:Bind ViewModel.IsAskingAi, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+                    <ProgressRing Width="20" Height="20" IsActive="True"/>
+                    <TextBlock Text="AI 助手正在思考..." Style="{ThemeResource BodyStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+                
+                <!-- 回答文本 -->
+                <TextBlock Text="{x:Bind ViewModel.AiAnswer, Mode=OneWay}" 
+                           TextWrapping="Wrap" IsTextSelectionEnabled="True"
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 底部输入框 -->
+        <Grid Grid.Row="3" Margin="0,20,0,0" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0"
+                     Text="{x:Bind ViewModel.UserQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     PlaceholderText="发送消息给智能助手..."
+                     IsEnabled="{x:Bind ViewModel.IsAskingAi, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                     AcceptsReturn="True" MaxHeight="100"/>
+
+            <Button Grid.Column="1"
+                    Command="{x:Bind ViewModel.AskAiCommand}"
+                    Style="{StaticResource AccentButtonStyle}"
+                    VerticalAlignment="Bottom" Height="34" Width="80">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <FontIcon Glyph="&#xE724;" FontSize="14"/>
+                    <TextBlock Text="发送"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Grid>
+</Page>
