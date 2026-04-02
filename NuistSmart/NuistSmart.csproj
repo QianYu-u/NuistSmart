@@ -13,9 +13,7 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-	<ItemGroup>
-	  <Page Remove="Views\LibrarySearchPage.xaml" />
-	</ItemGroup>
+
 
 	<ItemGroup>
 		<Content Include="Assets\SplashScreen.scale-200.png" />
@@ -73,7 +71,10 @@
 		<Page Update="Views\BusPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-        <Page Include="Views\LibrarySearchPage.xaml">
+        <Page Update="Views\LibrarySearchPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\BookDetailPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>

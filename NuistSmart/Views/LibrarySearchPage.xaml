@@ -8,41 +8,133 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Padding="24">
+    <Grid Padding="24,20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <!-- 搜索栏 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 新书标题 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 新书网格 -->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBox Width="360"
-                     PlaceholderText="请输入书名或关键词"
-                     Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay}" />
-            <Button Content="搜索"
-                    Command="{x:Bind ViewModel.SearchCommand}" />
+        <!-- Row 0: 搜索栏 -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0"
+                     PlaceholderText="搜索书名、作者或关键词..."
+                     Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     CornerRadius="8"
+                     Padding="12,10"
+                     FontSize="14"
+                     MaxWidth="600"
+                     HorizontalAlignment="Left"/>
+
+            <Button Grid.Column="1"
+                    Content="搜索"
+                    Command="{x:Bind ViewModel.SearchCommand}"
+                    Style="{StaticResource AccentButtonStyle}"
+                    CornerRadius="8"
+                    Padding="20,8"
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- Row 1: 标题 & 状态 -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,0,0,16">
+            <FontIcon Glyph="&#xE8F1;" FontSize="20" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            <TextBlock x:Name="GridTitle"
+                       Text="{x:Bind ViewModel.DisplayTitle, Mode=OneWay}"
+                       FontSize="20"
+                       FontWeight="SemiBold"/>
+            <ProgressRing Width="20" Height="20"
+                          IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                          Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                          Margin="8,0,0,0"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,12,0,12">
-            <ProgressRing Width="20"
-                          Height="20"
-                          IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
-            <TextBlock Text="正在搜索..." Opacity="0.8" />
-        </StackPanel>
+        <!-- Row 2: 图书网格 -->
+        <Grid Grid.Row="2">
+            <!-- 加载中/空状态占位 -->
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="12"
+                        Visibility="{x:Bind ViewModel.ShowEmptyState, Mode=OneWay}">
+                <FontIcon Glyph="&#xE783;" FontSize="48" Opacity="0.4"/>
+                <TextBlock Text="{x:Bind ViewModel.EmptyStateMessage, Mode=OneWay}"
+                           Opacity="0.6"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
 
-        <ListView Grid.Row="2"
-                  ItemsSource="{x:Bind ViewModel.SearchResults, Mode=OneWay}">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:BookItem">
-                    <StackPanel Margin="0,8" Spacing="4">
-                        <TextBlock Text="{x:Bind Title}" TextWrapping="Wrap" Style="{ThemeResource SubtitleTextBlockStyle}" />
-                        <TextBlock Text="{x:Bind Author}" Opacity="0.85" />
-                        <TextBlock Text="{x:Bind Publisher}" Opacity="0.75" />
-                        <TextBlock Text="{x:Bind CallNumber}" Opacity="0.75" />
-                        <TextBlock Text="{x:Bind AvailableStatus}" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            <!-- 图书 GridView -->
+            <GridView x:Name="BooksGrid"
+                      ItemsSource="{x:Bind ViewModel.Books, Mode=OneWay}"
+                      IsItemClickEnabled="True"
+                      ItemClick="NewBooksGrid_ItemClick"
+                      SelectionMode="None"
+                      Padding="0,0,0,24">
+
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal"
+                                       ItemWidth="180"
+                                       ItemHeight="280"
+                                       HorizontalAlignment="Left"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="models:BookItem">
+                        <Grid Width="160" Height="260"
+                              Padding="8"
+                              CornerRadius="8"
+                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                              BorderThickness="1">
+
+                            <Grid.RowDefinitions>
+                                <!-- 封面 -->
+                                <RowDefinition Height="*"/>
+                                <!-- 书名 -->
+                                <RowDefinition Height="Auto"/>
+                                <!-- 作者 -->
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- 封面图片 -->
+                            <Border Grid.Row="0" CornerRadius="6" Margin="4,4,4,8">
+                                <Image Source="{x:Bind CoverImage, Mode=OneWay}"
+                                       Stretch="UniformToFill"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- 书名 -->
+                            <TextBlock Grid.Row="1"
+                                       Text="{x:Bind Title, Mode=OneWay}"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxLines="2"
+                                       TextWrapping="Wrap"
+                                       Margin="4,0,4,2"/>
+
+                            <!-- 作者 -->
+                            <TextBlock Grid.Row="2"
+                                       Text="{x:Bind Author, Mode=OneWay}"
+                                       FontSize="11"
+                                       Opacity="0.65"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxLines="1"
+                                       Margin="4,0,4,4"/>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </Grid>
     </Grid>
 </Page>
