@@ -361,3 +361,16 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# AI操作与构建遗留日志
+build_*.txt
+err*.txt
+*error*.txt
+verbose_*.txt
+*_backup.txt
+
+# C#/.NET 基础忽略目录（如原文件无此项，需补充）
+bin/
+obj/
+.vs/
+*.user
