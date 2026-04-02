@@ -4,7 +4,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using NuistSmart.Models;
 using NuistSmart.ViewModels;
-using global::Microsoft.UI.Xaml.Markup;
 using System;
 
 namespace NuistSmart.Views
@@ -15,10 +14,10 @@ namespace NuistSmart.Views
 
         public ShellPage()
         {
-            this.InitializeComponent();
-            
             // 从 DI 容器获取 ViewModel
             ViewModel = App.ServiceProvider.GetRequiredService<ShellViewModel>();
+
+            this.InitializeComponent();
 
             // 默认选中第一个菜单项（智能对话）
             MainNavigationView.SelectedItem = MainNavigationView.MenuItems[0];
@@ -38,9 +37,6 @@ namespace NuistSmart.Views
             {
                 // 设置当前用户到 ViewModel
                 ViewModel.SetCurrentUser(user);
-
-                // 更新 UI 显示学号
-                StudentIdText.Text = $"学号：{user.StudentId}";
             }
         }
 
@@ -72,6 +68,10 @@ namespace NuistSmart.Views
                         // 导航到信息公告页面 (NewsPage)
                         // 注意：这里必须确保 NewsPage.xaml 已经存在
                         ContentFrame.Navigate(typeof(NuistSmart.Views.NewsPage));
+                        break;
+
+                    case "LibrarySearchPage":
+                        ContentFrame.Navigate(typeof(NuistSmart.Views.LibrarySearchPage));
                         break;
 
                     case "QueryPage":

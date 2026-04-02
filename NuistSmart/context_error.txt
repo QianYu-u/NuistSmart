@@ -1,0 +1,405 @@
+﻿
+  msbuild.log:3518:       正
+在使用程序集“C:\Users\death\.nuge
+t\packages\microsoft.window
+s.sdk.buildtools.msix\1.7.2
+0250829.1\build\..\tools\ne
+t6.0\Microsoft.Windows.SDK.
+BuildTools.MSIX.dll”中的“WinA
+ppSdkValidateAppxManifestIt
+ems”任务。
+  msbuild.log:3519:       任
+务“WinAppSdkValidateAppxMani
+festItems”
+  msbuild.log:3520:       已
+完成执行任务“WinAppSdkValidateApp
+xManifestItems”的操作。
+  msbuild.log:3521:   1:7>已
+完成在项目“NuistSmart.csproj”中生成
+目标“_ValidatePresenceOfAppxM
+anifestItems”的操作。
+  msbuild.log:3522:   1:7>来
+自项目“F:\Code\CS\NuistSmart\N
+uistSmart\NuistSmart.csproj
+”的文件“C:\Users\death\.nuget\
+packages\microsoft.windows.
+sdk.buildtools.msix\1.7.202
+50829.1\build\Microsoft.Win
+dows.SDK.BuildTools.MSIX.Pr
+i.targets”中的目标“CalculateApp
+xGenerateProjectPriEnabled”
+(目标“GetPriIndexName”依赖于它):
+  msbuild.log:3523:   1:7>已
+完成在项目“NuistSmart.csproj”中生成
+目标“CalculateAppxGeneratePro
+jectPriEnabled”的操作。
+  msbuild.log:3524:   1:7>来
+自项目“F:\Code\CS\NuistSmart\N
+uistSmart\NuistSmart.csproj
+”的文件“C:\Users\death\.nuget\
+packages\microsoft.windowsa
+ppsdk.winui\1.8.251222000\b
+uildTransitive\Microsoft.UI
+.Xaml.Markup.Compiler.inter
+op.targets”中的目标“GetPriIndex
+Name”(目标“MarkupCompilePass1
+”依赖于它):
+  msbuild.log:3525:   1:7>已
+完成在项目“NuistSmart.csproj”中生成
+目标“GetPriIndexName”的操作。
+  msbuild.log:3526:   1:7>来
+自项目“F:\Code\CS\NuistSmart\N
+uistSmart\NuistSmart.csproj
+”的文件“C:\Users\death\.nuget\
+packages\microsoft.windows.
+sdk.buildtools.msix\1.7.202
+50829.1\build\Microsoft.Win
+dows.SDK.BuildTools.MSIX.Co
+mmon.props”中的目标“_UpdatePriI
+ndex”(目标“MarkupCompilePass1
+”依赖于它):
+  msbuild.log:3527:   1:7>已
+完成在项目“NuistSmart.csproj”中生成
+目标“_UpdatePriIndex”的操作。
+  msbuild.log:3528:   1:7>来
+自项目“F:\Code\CS\NuistSmart\N
+uistSmart\NuistSmart.csproj
+”的文件“C:\Users\death\.nuget\
+packages\microsoft.windowsa
+ppsdk.winui\1.8.251222000\b
+uildTransitive\Microsoft.UI
+.Xaml.Markup.Compiler.inter
+op.targets”中的目标“GetPrecompi
+ledHeaderFile”(目标“MarkupCom
+pilePass1”依赖于它):
+  msbuild.log:3529:   1:7>已
+完成在项目“NuistSmart.csproj”中生成
+目标“GetPrecompiledHeaderFile
+”的操作。
+  msbuild.log:3530:   1:7>来
+自项目“F:\Code\CS\NuistSmart\N
+uistSmart\NuistSmart.csproj
+”的文件“C:\Users\death\.nuget\
+packages\microsoft.windowsa
+ppsdk.winui\1.8.251222000\b
+uildTransitive\Microsoft.UI
+.Xaml.Markup.Compiler.inter
+op.targets”中的目标“MarkupCompi
+lePass1”(目标“PrepareResource
+s”依赖于它):
+  msbuild.log:3531:       任
+务“MakeDir”
+  msbuild.log:3532:       已
+完成执行任务“MakeDir”的操作。
+  msbuild.log:3533:       在
+ TaskRun 期间加载的程序集: Microsof
+t.UI.Xaml.Markup.Compiler.I
+O, Version=3.0.0.2512, Cult
+ure=neutral, PublicKeyToken
+=de31ebe4ad15742b (位置: C:\U
+sers\death\.nuget\packages\
+microsoft.windowsappsdk.win
+ui\1.8.251222000\tools\net6
+.0\Microsoft.UI.Xaml.Markup
+.Compiler.IO.dll，MVID: 4213
+ab32-cfad-470b-ac6c-98bddda
+fe4f9，AssemblyLoadContext: 
+MSBuild plugin C:\Users\dea
+th\.nuget\packages\microsof
+t.windowsappsdk.winui\1.8.2
+51222000\tools\net6.0\Micro
+soft.UI.Xaml.Markup.Compile
+r.IO.dll)
+  msbuild.log:3534:       在
+ TaskRun 期间加载的程序集: Microsof
+t.UI.Xaml.Markup.Compiler.M
+SBuildInterop, Version=3.0.
+0.2512, Culture=neutral, Pu
+blicKeyToken=de31ebe4ad1574
+2b (位置: C:\Users\death\.nug
+et\packages\microsoft.windo
+wsappsdk.winui\1.8.25122200
+0\tools\net6.0\Microsoft.UI
+.Xaml.Markup.Compiler.MSBui
+ldInterop.dll，MVID: 583a2ed
+a-521c-4fd9-ba1f-ed30bae6ad
+0c，AssemblyLoadContext: MSB
+uild plugin C:\Users\death\
+.nuget\packages\microsoft.w
+indowsappsdk.winui\1.8.2512
+22000\tools\net6.0\Microsof
+t.UI.Xaml.Markup.Compiler.I
+O.dll)
+  msbuild.log:3535:       正
+在使用程序集“C:\Users\death\.nuge
+t\packages\microsoft.window
+sappsdk.winui\1.8.251222000
+\buildTransitive\..\tools\n
+et6.0\Microsoft.UI.Xaml.Mar
+kup.Compiler.IO.dll”中的“Inpu
+tSerializer”任务。
+  msbuild.log:3536:       任
+务“InputSerializer”
+  msbuild.log:3537:        
+ 在 TaskRun (Microsoft.UI.Xa
+ml.Markup.Compiler.IO.Input
+Serializer) 期间加载的程序集: Syste
+m.Text.Json, Version=6.0.0.
+0, Culture=neutral, PublicK
+eyToken=cc7b13ffcd2ddd51 (位
+置: C:\Users\death\.nuget\pa
+ckages\microsoft.windowsapp
+sdk.winui\1.8.251222000\too
+ls\net6.0\System.Text.Json.
+dll，MVID: 18286260-1922-4a4
+7-ab1c-75627396fd30，Assembl
+yLoadContext: MSBuild plugi
+n C:\Users\death\.nuget\pac
+kages\microsoft.windowsapps
+dk.winui\1.8.251222000\tool
+s\net6.0\Microsoft.UI.Xaml.
+Markup.Compiler.IO.dll)
+  msbuild.log:3538:        
+ 在 TaskRun (Microsoft.UI.Xa
+ml.Markup.Compiler.IO.Input
+Serializer) 期间加载的程序集: Micro
+soft.Bcl.AsyncInterfaces, V
+ersion=6.0.0.0, Culture=neu
+tral, PublicKeyToken=cc7b13
+ffcd2ddd51 (位置: C:\Users\de
+ath\.nuget\packages\microso
+ft.windowsappsdk.winui\1.8.
+251222000\tools\net6.0\Micr
+osoft.Bcl.AsyncInterfaces.d
+ll，MVID: b2422c07-7a9d-4584
+-af3f-f1d7011f6a5a，Assembly
+LoadContext: MSBuild plugin
+ C:\Users\death\.nuget\pack
+ages\microsoft.windowsappsd
+k.winui\1.8.251222000\tools
+\net6.0\Microsoft.UI.Xaml.M
+arkup.Compiler.IO.dll)
+  msbuild.log:3539:        
+ 在 TaskRun (Microsoft.UI.Xa
+ml.Markup.Compiler.IO.Input
+Serializer) 期间加载的程序集: Syste
+m.Text.Encodings.Web, Versi
+on=6.0.0.0, Culture=neutral
+, PublicKeyToken=cc7b13ffcd
+2ddd51 (位置: C:\Users\death\
+.nuget\packages\microsoft.w
+indowsappsdk.winui\1.8.2512
+22000\tools\net6.0\System.T
+ext.Encodings.Web.dll，MVID:
+ c7521d8a-f0e7-4fc7-b157-92
+3bd9b7a91e，AssemblyLoadCont
+ext: MSBuild plugin C:\User
+s\death\.nuget\packages\mic
+rosoft.windowsappsdk.winui\
+1.8.251222000\tools\net6.0\
+Microsoft.UI.Xaml.Markup.Co
+mpiler.IO.dll)
+  msbuild.log:3540:        
+ 在 TaskRun (Microsoft.UI.Xa
+ml.Markup.Compiler.IO.Input
+Serializer) 期间加载的程序集: mscor
+lib, Version=4.0.0.0, Cultu
+re=neutral, PublicKeyToken=
+b77a5c561934e089 (位置: C:\Pr
+ogram Files\dotnet\shared\M
+icrosoft.NETCore.App\10.0.5
+\mscorlib.dll，MVID: 8c36868
+8-e63f-4b7a-9348-5c85a5958f
+a8，AssemblyLoadContext: Def
+ault)
+  msbuild.log:3541:        
+ 在 TaskRun (Microsoft.UI.Xa
+ml.Markup.Compiler.IO.Input
+Serializer) 期间加载的程序集: Syste
+m.Core, Version=4.0.0.0, Cu
+lture=neutral, PublicKeyTok
+en=b77a5c561934e089 (位置: C:
+\Program Files\dotnet\share
+d\Microsoft.NETCore.App\10.
+0.5\System.Core.dll，MVID: 0
+c9e7645-4358-4a80-b012-3e94
+8485cfdf，AssemblyLoadContex
+t: Default)
+  msbuild.log:3542:        
+ 在 TaskRun (Microsoft.UI.Xa
+ml.Markup.Compiler.IO.Input
+Serializer) 期间加载的程序集: Syste
+m.Threading.Tasks.Extension
+s, Version=10.0.0.0, Cultur
+e=neutral, PublicKeyToken=c
+c7b13ffcd2ddd51 (位置: C:\Pro
+gram Files\dotnet\shared\Mi
+crosoft.NETCore.App\10.0.5\
+System.Threading.Tasks.Exte
+nsions.dll，MVID: 7ff9c827-5
+59d-42d6-8817-ba0e5e9ebe64，
+AssemblyLoadContext: Defaul
+t)
+  msbuild.log:3543:        
+ 在 TaskRun (Microsoft.UI.Xa
+ml.Markup.Compiler.IO.Input
+Serializer) 期间加载的程序集: Syste
+m.Buffers, Version=10.0.0.0
+, Culture=neutral, PublicKe
+yToken=cc7b13ffcd2ddd51 (位置
+: C:\Program Files\dotnet\s
+hared\Microsoft.NETCore.App
+\10.0.5\System.Buffers.dll，
+MVID: d4cfd973-d670-4221-9f
+f9-9e4c0ca2f86c，AssemblyLoa
+dContext: Default)
+  msbuild.log:3544:       已
+完成执行任务“InputSerializer”的操作。
+  msbuild.log:3545:       正
+在使用程序集“Microsoft.Build.Task
+s.Core, Version=15.1.0.0, C
+ulture=neutral, PublicKeyTo
+ken=b03f5f7f11d50a3a”中的“Exe
+c”任务。
+  msbuild.log:3546:       任
+务“Exec”
+  msbuild.log:3547:        
+ "C:\Users\death\.nuget\pac
+kages\microsoft.windowsapps
+dk.winui\1.8.251222000\buil
+dTransitive\..\tools\net6.0
+\..\net472\XamlCompiler.exe
+" "obj\Debug\net8.0-windows
+10.0.19041.0\\input.json" "
+obj\Debug\net8.0-windows10.
+0.19041.0\\output.json"
+> msbuild.log:3548:   1:7>C
+:\Users\death\.nuget\packag
+es\microsoft.windowsappsdk.
+winui\1.8.251222000\buildTr
+ansitive\Microsoft.UI.Xaml.
+Markup.Compiler.interop.tar
+gets(594,9): error MSB3073:
+ 命令“"C:\Users\death\.nuget\
+packages\microsoft.windowsa
+ppsdk.winui\1.8.251222000\b
+uildTransitive\..\tools\net
+6.0\..\net472\XamlCompiler.
+exe" "obj\Debug\net8.0-wind
+ows10.0.19041.0\\input.json
+" "obj\Debug\net8.0-windows
+10.0.19041.0\\output.json"”
+已退出，代码为 1。 [F:\Code\CS\Nuis
+tSmart\NuistSmart\NuistSmar
+t.csproj]
+  msbuild.log:3558:       已
+完成执行任务“ConvertToAbsolutePat
+h”的操作。
+  msbuild.log:3559:       正
+在使用程序集“Microsoft.Build.Task
+s.Core, Version=15.1.0.0, C
+ulture=neutral, PublicKeyTo
+ken=b03f5f7f11d50a3a”中的“Fin
+dUnderPath”任务。
+  msbuild.log:3560:       任
+务“FindUnderPath”
+  msbuild.log:3561:        
+ 比较路径为“F:\Code\CS\NuistSmar
+t\NuistSmart”。
+  msbuild.log:3562:       已
+完成执行任务“FindUnderPath”的操作。
+  msbuild.log:3563:       任
+务“FindUnderPath”
+  msbuild.log:3564:        
+ 比较路径为“bin\Debug\net8.0-win
+dows10.0.19041.0\”。
+  msbuild.log:3565:       已
+完成执行任务“FindUnderPath”的操作。
+  msbuild.log:3566:       任
+务“FindUnderPath”
+  msbuild.log:3567:        
+ 比较路径为“obj\Debug\net8.0-win
+dows10.0.19041.0\”。
+  msbuild.log:3568:       已
+完成执行任务“FindUnderPath”的操作。
+  msbuild.log:3569:       任
+务“RemoveDuplicates”
+  msbuild.log:3570:       已
+完成执行任务“RemoveDuplicates”的操作
+。
+  msbuild.log:3571:   1:7>已
+完成在项目“NuistSmart.csproj”中生成
+目标“_CleanGetCurrentAndPrior
+FileWrites”的操作。
+  msbuild.log:3572:   1:7>来
+自项目“F:\Code\CS\NuistSmart\N
+uistSmart\NuistSmart.csproj
+”的文件“C:\Program Files\dotne
+t\sdk\10.0.201\Microsoft.Co
+mmon.CurrentVersion.targets
+”中的目标“_CleanRecordFileWrite
+s”(目标“CoreBuild”依赖于它):
+  msbuild.log:3573:       任
+务“RemoveDuplicates”
+  msbuild.log:3574:       已
+完成执行任务“RemoveDuplicates”的操作
+。
+  msbuild.log:3575:       任
+务“MakeDir”
+  msbuild.log:3576:       已
+完成执行任务“MakeDir”的操作。
+  msbuild.log:3577:       正
+在使用程序集“Microsoft.Build.Task
+s.Core, Version=15.1.0.0, C
+ulture=neutral, PublicKeyTo
+ken=b03f5f7f11d50a3a”中的“Wri
+teLinesToFile”任务。
+  msbuild.log:3578:       任
+务“WriteLinesToFile”
+  msbuild.log:3579:        
+ 跳过写入到文件“F:\Code\CS\NuistSm
+art\NuistSmart\obj\Debug\ne
+t8.0-windows10.0.19041.0\Nu
+istSmart.csproj.FileListAbs
+olute.txt”，因为内容不会改变。
+  msbuild.log:3580:       已
+完成执行任务“WriteLinesToFile”的操作
+。
+  msbuild.log:3581:   1:7>已
+完成在项目“NuistSmart.csproj”中生成
+目标“_CleanRecordFileWrites”的
+操作。
+  msbuild.log:3582:   1:7>已
+完成生成项目“F:\Code\CS\NuistSmar
+t\NuistSmart\NuistSmart.csp
+roj”(默认目标)的操作 - 失败。
+  msbuild.log:3583:
+  msbuild.log:3584:生成失败。
+  msbuild.log:3585:
+  msbuild.log:3586:       “
+F:\Code\CS\NuistSmart\Nuist
+Smart\NuistSmart.csproj”(默认
+目标) (1:7) ->
+  msbuild.log:3587:       (
+MarkupCompilePass1 目标) -> 
+> msbuild.log:3588:        
+ C:\Users\death\.nuget\pack
+ages\microsoft.windowsappsd
+k.winui\1.8.251222000\build
+Transitive\Microsoft.UI.Xam
+l.Markup.Compiler.interop.t
+argets(594,9): error MSB307
+3: 命令“"C:\Users\death\.nuge
+t\packages\microsoft.window
+sappsdk.winui\1.8.251222000
+\buildTransitive\..\tools\n
+et6.0\..\net472\XamlCompile
+r.exe" "obj\Debug\net8.0-wi
+ndows10.0.19041.0\\input.js
+on" "obj\Debug\net8.0-windo
+ws10.0.19041.0\\output.json
+"”已退出，代码为 1。 [F:\Code\CS\Nu
+istSmart\NuistSmart\NuistSm
+art.csproj]
+
+

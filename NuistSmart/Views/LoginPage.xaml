@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="NuistSmart.Views.LoginPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -90,16 +90,15 @@
                 </StackPanel>
             </Grid>
 
-            <!-- ============ 右侧登录区：白色圆角卡片（等高：固定高度 480） ============ -->
+            <!-- ============ 右侧登录区：CAS WebView2 容器 ============ -->
             <Grid Grid.Column="1">
                 <Border 
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    Width="360"
-                    Height="480"
+                    Width="400"
+                    Height="500"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     CornerRadius="8"
-                    Padding="40"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1">
                     
@@ -107,82 +106,11 @@
                         <ThemeShadow />
                     </Border.Shadow>
                     
-                    <StackPanel Spacing="20" VerticalAlignment="Center">
-                        
-                        <!-- 表单标题 -->
-                        <StackPanel Spacing="8">
-                            <TextBlock 
-                                Text="登录"
-                                FontSize="28"
-                                FontWeight="Bold"
-                                Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
-                            <TextBlock 
-                                Text="使用您的学号和密码登录系统"
-                                FontSize="13"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        </StackPanel>
-
-                        <!-- 输入框区域（关键修复：固定宽度 280） -->
-                        <StackPanel Spacing="16" HorizontalAlignment="Center">
-                            
-                            <!-- 学号输入框（固定宽度 280，防止撑大窗口） -->
-                            <TextBox 
-                                x:Name="StudentIdTextBox"
-                                Header="学号"
-                                PlaceholderText="请输入学号（测试：admin）"
-                                Width="280"
-                                HorizontalAlignment="Center"
-                                Text="{x:Bind ViewModel.StudentId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
-
-                            <!-- 密码输入框（固定宽度 280，禁用显示按钮防止抖动） -->
-                            <PasswordBox 
-                                x:Name="PasswordBox"
-                                Header="密码"
-                                PlaceholderText="请输入密码（测试：123456）"
-                                Width="280"
-                                HorizontalAlignment="Center"
-                                Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsPasswordRevealButtonEnabled="False"
-                                IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
-
-                            <!-- 错误消息提示 -->
-                            <InfoBar 
-                                Severity="Error"
-                                Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
-                                IsOpen="{x:Bind ViewModel.ErrorMessage, Mode=OneWay, Converter={StaticResource StringToBooleanConverter}}"
-                                IsClosable="True"
-                                Width="280"/>
-                        </StackPanel>
-
-                        <!-- 登录按钮和加载状态 -->
-                        <StackPanel Spacing="16" HorizontalAlignment="Center">
-                            
-                            <!-- 登录按钮（固定宽度 280，与输入框对齐） -->
-                            <Button 
-                                Content="登录"
-                                Width="280"
-                                Height="40"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Command="{x:Bind ViewModel.LoginCommand}"
-                                IsEnabled="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource InverseBooleanConverter}}"/>
-
-                            <!-- 加载圈 -->
-                            <ProgressRing 
-                                IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                                Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                                HorizontalAlignment="Center"/>
-                        </StackPanel>
-
-                        <!-- 提示信息 -->
-                        <TextBlock 
-                            Text="首次使用请使用测试账号登录"
-                            FontSize="12"
-                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                            HorizontalAlignment="Center"
-                            TextWrapping="Wrap"/>
-                    </StackPanel>
+                    <!-- CoreWebView2 必须被设置 CornerRadius 以应用到上层 Border 的裁切效果中（WinUI 3 内部处理） 
+                         不过可以直接用 Grid 包含 WebView2 并在外部裁切 -->
+                    <Grid CornerRadius="8" Background="Transparent">
+                        <WebView2 x:Name="LoginWebView" />
+                    </Grid>
                 </Border>
             </Grid>
         </Grid>

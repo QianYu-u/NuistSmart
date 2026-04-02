@@ -1,0 +1,988 @@
+﻿
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.props(90,5): 
+message : Property reassign
+ment: $(AssemblySearchPaths
+)="{CandidateAssemblyFiles}
+;{HintPathFromItem}" (previ
+ous value: "{CandidateAssem
+blyFiles}") at C:\Program F
+iles\dotnet\sdk\10.0.201\Sd
+ks\Microsoft.NET.Sdk\target
+s\Microsoft.NET.Sdk.props (
+90,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.props(91,5): 
+message : Property reassign
+ment: $(AssemblySearchPaths
+)="{CandidateAssemblyFiles}
+;{HintPathFromItem};{Target
+FrameworkDirectory}" (previ
+ous value: "{CandidateAssem
+blyFiles};{HintPathFromItem
+}") at C:\Program Files\dot
+net\sdk\10.0.201\Sdks\Micro
+soft.NET.Sdk\targets\Micros
+oft.NET.Sdk.props (91,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.props(92,5): 
+message : Property reassign
+ment: $(AssemblySearchPaths
+)="{CandidateAssemblyFiles}
+;{HintPathFromItem};{Target
+FrameworkDirectory};{RawFil
+eName}" (previous value: "{
+CandidateAssemblyFiles};{Hi
+ntPathFromItem};{TargetFram
+eworkDirectory}") at C:\Pro
+gram Files\dotnet\sdk\10.0.
+201\Sdks\Microsoft.NET.Sdk\
+targets\Microsoft.NET.Sdk.p
+rops (92,5)
+         The "DefaultSdkRes
+olver" resolver attempted t
+o resolve the SDK "Microsof
+t.NET.SDK.WorkloadAutoImpor
+tPropsLocator".
+         Warnings: null
+>        Errors: MSB4276: T
+he default SDK resolver fai
+led to resolve SDK "Microso
+ft.NET.SDK.WorkloadAutoImpo
+rtPropsLocator" because dir
+ectory "C:\Program Files\do
+tnet\sdk\10.0.201\Sdks\Micr
+osoft.NET.SDK.WorkloadAutoI
+mportPropsLocator\Sdk" did 
+not exist.
+         Assembly loaded du
+ring Evaluation: Microsoft.
+Build.NuGetSdkResolver, Ver
+sion=7.3.0.0, Culture=neutr
+al, PublicKeyToken=31bf3856
+ad364e35 (location: C:\Prog
+ram Files\dotnet\sdk\10.0.2
+01\Microsoft.Build.NuGetSdk
+Resolver.dll, MVID: 27d8fe8
+0-3755-4103-8cd8-2558fcde1f
+3e, AssemblyLoadContext: MS
+Build plugin C:\Program Fil
+es\dotnet\sdk\10.0.201\Micr
+osoft.Build.NuGetSdkResolve
+r.dll)
+         Assembly loaded du
+ring Evaluation: System.Ref
+lection.Metadata, Version=1
+0.0.0.0, Culture=neutral, P
+ublicKeyToken=b03f5f7f11d50
+a3a (location: C:\Program F
+iles\dotnet\shared\Microsof
+t.NETCore.App\10.0.5\System
+.Reflection.Metadata.dll, M
+VID: 4e61a6ff-8e69-4b91-818
+c-30d30446243f, AssemblyLoa
+dContext: Default)
+         Assembly loaded du
+ring Evaluation: NuGet.Comm
+on, Version=7.3.0.0, Cultur
+e=neutral, PublicKeyToken=3
+1bf3856ad364e35 (location: 
+C:\Program Files\dotnet\sdk
+\10.0.201\NuGet.Common.dll,
+ MVID: 678ca447-e461-409c-b
+2e4-33ae4a4c5189, AssemblyL
+oadContext: MSBuild plugin 
+C:\Program Files\dotnet\sdk
+\10.0.201\Microsoft.Build.N
+uGetSdkResolver.dll)
+         Assembly loaded du
+ring Evaluation: System.Col
+lections.NonGeneric, Versio
+n=10.0.0.0, Culture=neutral
+, PublicKeyToken=b03f5f7f11
+d50a3a (location: C:\Progra
+m Files\dotnet\shared\Micro
+soft.NETCore.App\10.0.5\Sys
+tem.Collections.NonGeneric.
+dll, MVID: 3bb08922-ed14-4f
+a5-86fe-975e63ce3aa1, Assem
+blyLoadContext: Default)
+         Assembly loaded du
+ring Evaluation: Microsoft.
+NET.Sdk.WorkloadMSBuildSdkR
+esolver, Version=10.0.201.0
+, Culture=neutral, PublicKe
+yToken=31bf3856ad364e35 (lo
+cation: C:\Program Files\do
+tnet\sdk\10.0.201\Microsoft
+.NET.Sdk.WorkloadMSBuildSdk
+Resolver.dll, MVID: e8438f7
+4-7d84-47c0-916c-7ea1027a51
+ae, AssemblyLoadContext: MS
+Build plugin C:\Program Fil
+es\dotnet\sdk\10.0.201\Micr
+osoft.NET.Sdk.WorkloadMSBui
+ldSdkResolver.dll)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DefaultOutputPath
+s.targets(127,5): message :
+ Property reassignment: $(D
+efaultItemExcludes)=";bin\D
+ebug\/**;obj\Debug\/**" (pr
+evious value: ";bin\Debug\/
+**") at C:\Program Files\do
+tnet\sdk\10.0.201\Sdks\Micr
+osoft.NET.Sdk\targets\Micro
+soft.NET.DefaultOutputPaths
+.targets (127,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DefaultOutputPath
+s.targets(142,5): message :
+ Property reassignment: $(O
+utputPath)="bin\Debug\net8.
+0-windows10.0.19041.0\" (pr
+evious value: "bin\Debug\")
+ at C:\Program Files\dotnet
+\sdk\10.0.201\Sdks\Microsof
+t.NET.Sdk\targets\Microsoft
+.NET.DefaultOutputPaths.tar
+gets (142,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DefaultOutputPath
+s.targets(147,5): message :
+ Property reassignment: $(I
+ntermediateOutputPath)="obj
+\Debug\net8.0-windows10.0.1
+9041.0\" (previous value: "
+obj\Debug\") at C:\Program 
+Files\dotnet\sdk\10.0.201\S
+dks\Microsoft.NET.Sdk\targe
+ts\Microsoft.NET.DefaultOut
+putPaths.targets (147,5)
+         The "DefaultSdkRes
+olver" resolver attempted t
+o resolve the SDK "Microsof
+t.NET.SDK.WorkloadManifestT
+argetsLocator".
+         Warnings: null
+>        Errors: MSB4276: T
+he default SDK resolver fai
+led to resolve SDK "Microso
+ft.NET.SDK.WorkloadManifest
+TargetsLocator" because dir
+ectory "C:\Program Files\do
+tnet\sdk\10.0.201\Sdks\Micr
+osoft.NET.SDK.WorkloadManif
+estTargetsLocator\Sdk" did 
+not exist.
+         The SDK "Microsoft
+.NET.SDK.WorkloadManifestTa
+rgetsLocator" was successfu
+lly resolved by the "Micros
+oft.DotNet.MSBuildWorkloadS
+dkResolver" resolver to loc
+ation "C:\Program Files\dot
+net\sdk-manifests\10.0.100\
+microsoft.net.sdk.android\3
+6.1.30" and version "null".
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.BeforeCommon.
+targets(379,5): message : P
+roperty reassignment: $(Ros
+lynTargetsPath)="C:\Program
+ Files\dotnet\sdk\10.0.201\
+Sdks\Microsoft.NET.Sdk\targ
+ets\..\..\..\Roslyn" (previ
+ous value: "C:\Program File
+s\dotnet\sdk\10.0.201\Rosly
+n") at C:\Program Files\dot
+net\sdk\10.0.201\Sdks\Micro
+soft.NET.Sdk\targets\Micros
+oft.NET.Sdk.BeforeCommon.ta
+rgets (379,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Roslyn\M
+icrosoft.Managed.Core.targe
+ts(6,5): message : Property
+ reassignment: $(_BuildTask
+sDirectory)="C:\Program Fil
+es\dotnet\sdk\10.0.201\Sdks
+\Microsoft.NET.Sdk\targets\
+..\..\..\Roslyn\" (previous
+ value: "C:\Program Files\d
+otnet\sdk\10.0.201\Roslyn\"
+) at C:\Program Files\dotne
+t\sdk\10.0.201\Roslyn\Micro
+soft.Managed.Core.targets (
+6,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Roslyn\M
+icrosoft.CSharp.Core.target
+s(205,5): message : Propert
+y reassignment: $(CommandLi
+neArgsForDesignTimeEvaluati
+on)="-langversion:12.0 -def
+ine:TRACE" (previous value:
+ "-langversion:12.0") at C:
+\Program Files\dotnet\sdk\1
+0.0.201\Roslyn\Microsoft.CS
+harp.Core.targets (205,5)
+         Assembly loaded du
+ring Evaluation: Microsoft.
+Build.Utilities.Core, Versi
+on=15.1.0.0, Culture=neutra
+l, PublicKeyToken=b03f5f7f1
+1d50a3a (location: C:\Progr
+am Files\dotnet\sdk\10.0.20
+1\Microsoft.Build.Utilities
+.Core.dll, MVID: 37760b18-7
+f18-4594-9dee-494f4b15fbe6,
+ AssemblyLoadContext: Defau
+lt)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+   AssignTargetPaths;
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+   ResolveReferences
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+ 
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+ ") at C:\Program Files\dot
+net\sdk\10.0.201\Sdks\Micro
+soft.NET.Sdk\targets\Micros
+oft.NET.DesignerSupport.tar
+gets (21,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.CSharp.target
+s(31,5): message : Property
+ reassignment: $(DefineCons
+tants)="TRACE;DEBUG" (previ
+ous value: "TRACE") at C:\P
+rogram Files\dotnet\sdk\10.
+0.201\Sdks\Microsoft.NET.Sd
+k\targets\Microsoft.NET.Sdk
+.CSharp.targets (31,5)
+>        C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.CSharp.target
+s(45,5): message : Property
+ reassignment: $(WarningsAs
+Errors)=";NU1605;SYSLIB0011
+" (previous value: ";NU1605
+") at C:\Program Files\dotn
+et\sdk\10.0.201\Sdks\Micros
+oft.NET.Sdk\targets\Microso
+ft.NET.Sdk.CSharp.targets (
+45,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Windows.targets(2
+39,5): message : Property r
+eassignment: $(_RunCsWinRTG
+eneratorPropertyInputsCache
+Path)="F:\Code\CS\NuistSmar
+t\NuistSmart\obj\Debug\net8
+.0-windows10.0.19041.0\Nuis
+tSmart.cswinrtgen.cache" (p
+revious value: "obj\Debug\n
+et8.0-windows10.0.19041.0\N
+uistSmart.cswinrtgen.cache"
+) at C:\Program Files\dotne
+t\sdk\10.0.201\Sdks\Microso
+ft.NET.Sdk\targets\Microsof
+t.NET.Windows.targets (239,
+5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\NuGet.Bu
+ild.Tasks.Pack.targets(34,5
+): message : Property reass
+ignment: $(PackageDescripti
+on)="Package Description" (
+previous value: "") at C:\P
+rogram Files\dotnet\sdk\10.
+0.201\NuGet.Build.Tasks.Pac
+k.targets (34,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\NuGet.Bu
+ild.Tasks.Pack.targets(59,5
+): message : Property reass
+ignment: $(GenerateNuspecDe
+pendsOn)="Build;_LoadPackIn
+putItems; _GetTargetFramewo
+rksOutput; _WalkEachTargetP
+erFramework; _GetPackageFil
+es; " (previous value: "_Lo
+adPackInputItems; _GetTarge
+tFrameworksOutput; _WalkEac
+hTargetPerFramework; _GetPa
+ckageFiles; ") at C:\Progra
+m Files\dotnet\sdk\10.0.201
+\NuGet.Build.Tasks.Pack.tar
+gets (59,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\Sdk\Sdk.targ
+ets(59,5): message : Proper
+ty reassignment: $(_IsNotSe
+tContainersTargetsDir)="tru
+e" (previous value: "false"
+) at C:\Program Files\dotne
+t\sdk\10.0.201\Sdks\Microso
+ft.NET.Sdk\Sdk\Sdk.targets 
+(59,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Containe
+rs\build\Microsoft.NET.Buil
+d.Containers.targets(5,5): 
+message : Property reassign
+ment: $(_IsSDKContainerAllo
+wedVersion)="true" (previou
+s value: "false") at C:\Pro
+gram Files\dotnet\sdk\10.0.
+201\Containers\build\Micros
+oft.NET.Build.Containers.ta
+rgets (5,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+   AssignTargetPaths;
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+   ResolveReferences
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+ 
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+ ") at C:\Program Files\dot
+net\sdk\10.0.201\Sdks\Micro
+soft.NET.Sdk\targets\Micros
+oft.NET.DesignerSupport.tar
+gets (21,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.CSharp.target
+s(31,5): message : Property
+ reassignment: $(DefineCons
+tants)="TRACE;DEBUG" (previ
+ous value: "TRACE") at C:\P
+rogram Files\dotnet\sdk\10.
+0.201\Sdks\Microsoft.NET.Sd
+k\targets\Microsoft.NET.Sdk
+.CSharp.targets (31,5)
+>        C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.CSharp.target
+s(45,5): message : Property
+ reassignment: $(WarningsAs
+Errors)=";NU1605;SYSLIB0011
+" (previous value: ";NU1605
+") at C:\Program Files\dotn
+et\sdk\10.0.201\Sdks\Micros
+oft.NET.Sdk\targets\Microso
+ft.NET.Sdk.CSharp.targets (
+45,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Windows.targets(2
+39,5): message : Property r
+eassignment: $(_RunCsWinRTG
+eneratorPropertyInputsCache
+Path)="F:\Code\CS\NuistSmar
+t\NuistSmart\obj\Debug\net8
+.0-windows10.0.19041.0\Nuis
+tSmart.cswinrtgen.cache" (p
+revious value: "obj\Debug\n
+et8.0-windows10.0.19041.0\N
+uistSmart.cswinrtgen.cache"
+) at C:\Program Files\dotne
+t\sdk\10.0.201\Sdks\Microso
+ft.NET.Sdk\targets\Microsof
+t.NET.Windows.targets (239,
+5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\NuGet.Bu
+ild.Tasks.Pack.targets(34,5
+): message : Property reass
+ignment: $(PackageDescripti
+on)="Package Description" (
+previous value: "") at C:\P
+rogram Files\dotnet\sdk\10.
+0.201\NuGet.Build.Tasks.Pac
+k.targets (34,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\NuGet.Bu
+ild.Tasks.Pack.targets(59,5
+): message : Property reass
+ignment: $(GenerateNuspecDe
+pendsOn)="Build;_LoadPackIn
+putItems; _GetTargetFramewo
+rksOutput; _WalkEachTargetP
+erFramework; _GetPackageFil
+es; " (previous value: "_Lo
+adPackInputItems; _GetTarge
+tFrameworksOutput; _WalkEac
+hTargetPerFramework; _GetPa
+ckageFiles; ") at C:\Progra
+m Files\dotnet\sdk\10.0.201
+\NuGet.Build.Tasks.Pack.tar
+gets (59,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\Sdk\Sdk.targ
+ets(59,5): message : Proper
+ty reassignment: $(_IsNotSe
+tContainersTargetsDir)="tru
+e" (previous value: "false"
+) at C:\Program Files\dotne
+t\sdk\10.0.201\Sdks\Microso
+ft.NET.Sdk\Sdk\Sdk.targets 
+(59,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Containe
+rs\build\Microsoft.NET.Buil
+d.Containers.targets(5,5): 
+message : Property reassign
+ment: $(_IsSDKContainerAllo
+wedVersion)="true" (previou
+s value: "false") at C:\Pro
+gram Files\dotnet\sdk\10.0.
+201\Containers\build\Micros
+oft.NET.Build.Containers.ta
+rgets (5,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.props(90,5): 
+message : Property reassign
+ment: $(AssemblySearchPaths
+)="{CandidateAssemblyFiles}
+;{HintPathFromItem}" (previ
+ous value: "{CandidateAssem
+blyFiles}") at C:\Program F
+iles\dotnet\sdk\10.0.201\Sd
+ks\Microsoft.NET.Sdk\target
+s\Microsoft.NET.Sdk.props (
+90,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.props(91,5): 
+message : Property reassign
+ment: $(AssemblySearchPaths
+)="{CandidateAssemblyFiles}
+;{HintPathFromItem};{Target
+FrameworkDirectory}" (previ
+ous value: "{CandidateAssem
+blyFiles};{HintPathFromItem
+}") at C:\Program Files\dot
+net\sdk\10.0.201\Sdks\Micro
+soft.NET.Sdk\targets\Micros
+oft.NET.Sdk.props (91,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.props(92,5): 
+message : Property reassign
+ment: $(AssemblySearchPaths
+)="{CandidateAssemblyFiles}
+;{HintPathFromItem};{Target
+FrameworkDirectory};{RawFil
+eName}" (previous value: "{
+CandidateAssemblyFiles};{Hi
+ntPathFromItem};{TargetFram
+eworkDirectory}") at C:\Pro
+gram Files\dotnet\sdk\10.0.
+201\Sdks\Microsoft.NET.Sdk\
+targets\Microsoft.NET.Sdk.p
+rops (92,5)
+         The "DefaultSdkRes
+olver" resolver attempted t
+o resolve the SDK "Microsof
+t.NET.SDK.WorkloadAutoImpor
+tPropsLocator".
+         Warnings: null
+>        Errors: MSB4276: T
+he default SDK resolver fai
+led to resolve SDK "Microso
+ft.NET.SDK.WorkloadAutoImpo
+rtPropsLocator" because dir
+ectory "C:\Program Files\do
+tnet\sdk\10.0.201\Sdks\Micr
+osoft.NET.SDK.WorkloadAutoI
+mportPropsLocator\Sdk" did 
+not exist.
+         The SDK "Microsoft
+.NET.SDK.WorkloadAutoImport
+PropsLocator" was successfu
+lly resolved by the "Micros
+oft.DotNet.MSBuildWorkloadS
+dkResolver" resolver to loc
+ation "null" and version "n
+ull".
+         F:\Code\CS\NuistSm
+art\NuistSmart\NuistSmart.c
+sproj(3,3): message : Prope
+rty reassignment: $(OutputT
+ype)="WinExe" (previous val
+ue: "Library") at F:\Code\C
+S\NuistSmart\NuistSmart\Nui
+stSmart.csproj (3,3)
+         F:\Code\CS\NuistSm
+art\NuistSmart\NuistSmart.c
+sproj(8,3): message : Prope
+rty reassignment: $(Platfor
+ms)="x86;x64;ARM64" (previo
+us value: "AnyCPU") at F:\C
+ode\CS\NuistSmart\NuistSmar
+t\NuistSmart.csproj (8,3)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.ImportPublish
+Profile.targets(28,5): mess
+age : Property reassignment
+: $(PublishProfileImported)
+="false" (previous value: "
+true") at C:\Program Files\
+dotnet\sdk\10.0.201\Sdks\Mi
+crosoft.NET.Sdk\targets\Mic
+rosoft.NET.Sdk.ImportPublis
+hProfile.targets (28,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.TargetFrameworkIn
+ference.targets(84,5): mess
+age : Property reassignment
+: $(TargetPlatformIdentifie
+r)="Windows" (previous valu
+e: "windows") at C:\Program
+ Files\dotnet\sdk\10.0.201\
+Sdks\Microsoft.NET.Sdk\targ
+ets\Microsoft.NET.TargetFra
+meworkInference.targets (84
+,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DefaultOutputPath
+s.targets(127,5): message :
+ Property reassignment: $(D
+efaultItemExcludes)=";bin\D
+ebug\/**;obj\Debug\/**" (pr
+evious value: ";bin\Debug\/
+**") at C:\Program Files\do
+tnet\sdk\10.0.201\Sdks\Micr
+osoft.NET.Sdk\targets\Micro
+soft.NET.DefaultOutputPaths
+.targets (127,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DefaultOutputPath
+s.targets(142,5): message :
+ Property reassignment: $(O
+utputPath)="bin\Debug\net8.
+0-windows10.0.19041.0\" (pr
+evious value: "bin\Debug\")
+ at C:\Program Files\dotnet
+\sdk\10.0.201\Sdks\Microsof
+t.NET.Sdk\targets\Microsoft
+.NET.DefaultOutputPaths.tar
+gets (142,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DefaultOutputPath
+s.targets(147,5): message :
+ Property reassignment: $(I
+ntermediateOutputPath)="obj
+\Debug\net8.0-windows10.0.1
+9041.0\" (previous value: "
+obj\Debug\") at C:\Program 
+Files\dotnet\sdk\10.0.201\S
+dks\Microsoft.NET.Sdk\targe
+ts\Microsoft.NET.DefaultOut
+putPaths.targets (147,5)
+         The "DefaultSdkRes
+olver" resolver attempted t
+o resolve the SDK "Microsof
+t.NET.SDK.WorkloadManifestT
+argetsLocator".
+         Warnings: null
+>        Errors: MSB4276: T
+he default SDK resolver fai
+led to resolve SDK "Microso
+ft.NET.SDK.WorkloadManifest
+TargetsLocator" because dir
+ectory "C:\Program Files\do
+tnet\sdk\10.0.201\Sdks\Micr
+osoft.NET.SDK.WorkloadManif
+estTargetsLocator\Sdk" did 
+not exist.
+         The SDK "Microsoft
+.NET.SDK.WorkloadManifestTa
+rgetsLocator" was successfu
+lly resolved by the "Micros
+oft.DotNet.MSBuildWorkloadS
+dkResolver" resolver to loc
+ation "C:\Program Files\dot
+net\sdk-manifests\10.0.100\
+microsoft.net.sdk.android\3
+6.1.30" and version "null".
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.BeforeCommon.
+targets(379,5): message : P
+roperty reassignment: $(Ros
+lynTargetsPath)="C:\Program
+ Files\dotnet\sdk\10.0.201\
+Sdks\Microsoft.NET.Sdk\targ
+ets\..\..\..\Roslyn" (previ
+ous value: "C:\Program File
+s\dotnet\sdk\10.0.201\Rosly
+n") at C:\Program Files\dot
+net\sdk\10.0.201\Sdks\Micro
+soft.NET.Sdk\targets\Micros
+oft.NET.Sdk.BeforeCommon.ta
+rgets (379,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Roslyn\M
+icrosoft.Managed.Core.targe
+ts(6,5): message : Property
+ reassignment: $(_BuildTask
+sDirectory)="C:\Program Fil
+es\dotnet\sdk\10.0.201\Sdks
+\Microsoft.NET.Sdk\targets\
+..\..\..\Roslyn\" (previous
+ value: "C:\Program Files\d
+otnet\sdk\10.0.201\Roslyn\"
+) at C:\Program Files\dotne
+t\sdk\10.0.201\Roslyn\Micro
+soft.Managed.Core.targets (
+6,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Roslyn\M
+icrosoft.CSharp.Core.target
+s(205,5): message : Propert
+y reassignment: $(CommandLi
+neArgsForDesignTimeEvaluati
+on)="-langversion:12.0 -def
+ine:TRACE" (previous value:
+ "-langversion:12.0") at C:
+\Program Files\dotnet\sdk\1
+0.0.201\Roslyn\Microsoft.CS
+harp.Core.targets (205,5)
+         C:\Users\death\.nu
+get\packages\microsoft.wind
+ows.sdk.buildtools.msix\1.7
+.20250829.1\build\Microsoft
+.Windows.SDK.BuildTools.MSI
+X.Common.props(16,5): messa
+ge : Property reassignment:
+ $(MsAppxPackageTargets)="D
+ont-Use-MsAppxPackageTarget
+s" (previous value: "WinUI3
+-NET5-Projects-Dont-Use-MsA
+ppxPackageTargets") at C:\U
+sers\death\.nuget\packages\
+microsoft.windows.sdk.build
+tools.msix\1.7.20250829.1\b
+uild\Microsoft.Windows.SDK.
+BuildTools.MSIX.Common.prop
+s (16,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+   AssignTargetPaths;
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+   ResolveReferences
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+ 
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.DesignerSupport.t
+argets(21,5): message :    
+ ") at C:\Program Files\dot
+net\sdk\10.0.201\Sdks\Micro
+soft.NET.Sdk\targets\Micros
+oft.NET.DesignerSupport.tar
+gets (21,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.CSharp.target
+s(31,5): message : Property
+ reassignment: $(DefineCons
+tants)="TRACE;MICROSOFT_WIN
+DOWSAPPSDK_AUTOINITIALIZE_D
+EPLOYMENTMANAGER;DEBUG" (pr
+evious value: "TRACE;MICROS
+OFT_WINDOWSAPPSDK_AUTOINITI
+ALIZE_DEPLOYMENTMANAGER") a
+t C:\Program Files\dotnet\s
+dk\10.0.201\Sdks\Microsoft.
+NET.Sdk\targets\Microsoft.N
+ET.Sdk.CSharp.targets (31,5
+)
+>        C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Sdk.CSharp.target
+s(45,5): message : Property
+ reassignment: $(WarningsAs
+Errors)=";NU1605;SYSLIB0011
+" (previous value: ";NU1605
+") at C:\Program Files\dotn
+et\sdk\10.0.201\Sdks\Micros
+oft.NET.Sdk\targets\Microso
+ft.NET.Sdk.CSharp.targets (
+45,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\targets\Micr
+osoft.NET.Windows.targets(2
+39,5): message : Property r
+eassignment: $(_RunCsWinRTG
+eneratorPropertyInputsCache
+Path)="F:\Code\CS\NuistSmar
+t\NuistSmart\obj\Debug\net8
+.0-windows10.0.19041.0\Nuis
+tSmart.cswinrtgen.cache" (p
+revious value: "obj\Debug\n
+et8.0-windows10.0.19041.0\N
+uistSmart.cswinrtgen.cache"
+) at C:\Program Files\dotne
+t\sdk\10.0.201\Sdks\Microso
+ft.NET.Sdk\targets\Microsof
+t.NET.Windows.targets (239,
+5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\NuGet.Bu
+ild.Tasks.Pack.targets(34,5
+): message : Property reass
+ignment: $(PackageDescripti
+on)="Package Description" (
+previous value: "") at C:\P
+rogram Files\dotnet\sdk\10.
+0.201\NuGet.Build.Tasks.Pac
+k.targets (34,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\NuGet.Bu
+ild.Tasks.Pack.targets(59,5
+): message : Property reass
+ignment: $(GenerateNuspecDe
+pendsOn)="Build;_LoadPackIn
+putItems; _GetTargetFramewo
+rksOutput; _WalkEachTargetP
+erFramework; _GetPackageFil
+es; " (previous value: "_Lo
+adPackInputItems; _GetTarge
+tFrameworksOutput; _WalkEac
+hTargetPerFramework; _GetPa
+ckageFiles; ") at C:\Progra
+m Files\dotnet\sdk\10.0.201
+\NuGet.Build.Tasks.Pack.tar
+gets (59,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Sdks\Mic
+rosoft.NET.Sdk\Sdk\Sdk.targ
+ets(59,5): message : Proper
+ty reassignment: $(_IsNotSe
+tContainersTargetsDir)="tru
+e" (previous value: "false"
+) at C:\Program Files\dotne
+t\sdk\10.0.201\Sdks\Microso
+ft.NET.Sdk\Sdk\Sdk.targets 
+(59,5)
+         C:\Program Files\d
+otnet\sdk\10.0.201\Containe
+rs\build\Microsoft.NET.Buil
+d.Containers.targets(5,5): 
+message : Property reassign
+ment: $(_IsSDKContainerAllo
+wedVersion)="true" (previou
+s value: "false") at C:\Pro
+gram Files\dotnet\sdk\10.0.
+201\Containers\build\Micros
+oft.NET.Build.Containers.ta
+rgets (5,5)
+           Assembly loaded 
+during TaskRun (Microsoft.U
+I.Xaml.Markup.Compiler.IO.I
+nputSerializer): System.Buf
+fers, Version=10.0.0.0, Cul
+ture=neutral, PublicKeyToke
+n=cc7b13ffcd2ddd51 (locatio
+n: C:\Program Files\dotnet\
+shared\Microsoft.NETCore.Ap
+p\10.0.5\System.Buffers.dll
+, MVID: d4cfd973-d670-4221-
+9ff9-9e4c0ca2f86c, Assembly
+LoadContext: Default)
+         Done executing tas
+k "InputSerializer".
+         Using "Exec" task 
+from assembly "Microsoft.Bu
+ild.Tasks.Core, Version=15.
+1.0.0, Culture=neutral, Pub
+licKeyToken=b03f5f7f11d50a3
+a".
+         Task "Exec"
+           "C:\Users\death\
+.nuget\packages\microsoft.w
+indowsappsdk.winui\1.8.2512
+22000\buildTransitive\..\to
+ols\net6.0\..\net472\XamlCo
+mpiler.exe" "obj\Debug\net8
+.0-windows10.0.19041.0\\inp
+ut.json" "obj\Debug\net8.0-
+windows10.0.19041.0\\output
+.json"
+>    1:7>C:\Users\death\.nu
+get\packages\microsoft.wind
+owsappsdk.winui\1.8.2512220
+00\buildTransitive\Microsof
+t.UI.Xaml.Markup.Compiler.i
+nterop.targets(594,9): erro
+r MSB3073: The command ""C:
+\Users\death\.nuget\package
+s\microsoft.windowsappsdk.w
+inui\1.8.251222000\buildTra
+nsitive\..\tools\net6.0\..\
+net472\XamlCompiler.exe" "o
+bj\Debug\net8.0-windows10.0
+.19041.0\\input.json" "obj\
+Debug\net8.0-windows10.0.19
+041.0\\output.json"" exited
+ with code 1. [F:\Code\CS\N
+uistSmart\NuistSmart\NuistS
+mart.csproj]
+         Done executing tas
+k "Exec" -- FAILED.
+     1:7>Done building targ
+et "MarkupCompilePass1" in 
+project "NuistSmart.csproj"
+ -- FAILED.
+     1:7>Target "_CheckForC
+ompileOutputs" in file "C:\
+Program Files\dotnet\sdk\10
+.0.201\Microsoft.Common.Cur
+rentVersion.targets" from p
+roject "F:\Code\CS\NuistSma
+rt\NuistSmart\NuistSmart.cs
+proj" (target "_CleanGetCur
+rentAndPriorFileWrites" dep
+ends on it):
+         C:\Program Files\d
+otnet\sdk\10.0.201\Microsof
+t.Common.CurrentVersion.tar
+gets(5590,7): message : Pro
+perty reassignment: $(_Debu
+gSymbolsProduced)="false" (
+previous value: "true") at 
+C:\Program Files\dotnet\sdk
+\10.0.201\Microsoft.Common.
+CurrentVersion.targets (559
+0,7) [F:\Code\CS\NuistSmart
+\NuistSmart\NuistSmart.cspr
+oj]
+     1:7>Done building targ
+et "_CheckForCompileOutputs
+" in project "NuistSmart.cs
+proj".
+  
+  Build FAILED.
+  
+         "F:\Code\CS\NuistS
+mart\NuistSmart\NuistSmart.
+csproj" (default target) (1
+:7) ->
+         (MarkupCompilePass
+1 target) -> 
+>          C:\Users\death\.
+nuget\packages\microsoft.wi
+ndowsappsdk.winui\1.8.25122
+2000\buildTransitive\Micros
+oft.UI.Xaml.Markup.Compiler
+.interop.targets(594,9): er
+ror MSB3073: The command ""
+C:\Users\death\.nuget\packa
+ges\microsoft.windowsappsdk
+.winui\1.8.251222000\buildT
+ransitive\..\tools\net6.0\.
+.\net472\XamlCompiler.exe" 
+"obj\Debug\net8.0-windows10
+.0.19041.0\\input.json" "ob
+j\Debug\net8.0-windows10.0.
+19041.0\\output.json"" exit
+ed with code 1. [F:\Code\CS
+\NuistSmart\NuistSmart\Nuis
+tSmart.csproj]
+  
+      0 Warning(s)
+>     1 Error(s)
+  
+  Time Elapsed 00:00:05.04
+
+

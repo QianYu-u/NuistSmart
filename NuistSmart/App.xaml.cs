@@ -72,6 +72,11 @@ namespace NuistSmart
              services.AddTransient<ChatViewModel>();
              services.AddSingleton<ShellViewModel>();
 
+             // Library Module
+             services.AddSingleton<LibraryService>();
+             services.AddTransient<LibraryViewModel>();
+             services.AddTransient<LibrarySearchViewModel>();
+
              // 校园巴士功能相关依赖注入
              services.AddTransient<TokenCaptureService>();
              services.AddSingleton<BusService>();

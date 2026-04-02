@@ -1,0 +1,39 @@
+﻿
+C:\Users\death\.nuget\packa
+ges\microsoft.windowsappsdk
+.winui\1.8.251222000\buildT
+ransitive\Microsoft.UI.Xaml
+.Markup.Compiler.interop.ta
+rgets(594,9): error MSB3073
+: 鍛戒护鈥?C:\Users\death\.nuge
+t\packages\microsoft.window
+sappsdk.winui\1.8.251222000
+\buildTransitive\..\tools\n
+et6.0\..\net472\XamlCompile
+r.exe" "obj\Debug\net8.0-wi
+ndows10.0.19041.0\\input.js
+on" "obj\Debug\net8.0-windo
+ws10.0.19041.0\\output.json
+"鈥濆凡閫€鍑猴紝浠ｇ爜涓?1銆?[F:\Code\C
+S\NuistSmart\NuistSmart\Nui
+stSmart.csproj]
+C:\Users\death\.nuget\packa
+ges\microsoft.windowsappsdk
+.winui\1.8.251222000\buildT
+ransitive\Microsoft.UI.Xaml
+.Markup.Compiler.interop.ta
+rgets(594,9): error MSB3073
+: 鍛戒护鈥?C:\Users\death\.nuge
+t\packages\microsoft.window
+sappsdk.winui\1.8.251222000
+\buildTransitive\..\tools\n
+et6.0\..\net472\XamlCompile
+r.exe" "obj\Debug\net8.0-wi
+ndows10.0.19041.0\\input.js
+on" "obj\Debug\net8.0-windo
+ws10.0.19041.0\\output.json
+"鈥濆凡閫€鍑猴紝浠ｇ爜涓?1銆?[F:\Code\C
+S\NuistSmart\NuistSmart\Nui
+stSmart.csproj]
+
+
