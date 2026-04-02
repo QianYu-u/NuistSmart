@@ -62,7 +62,8 @@
                         x:Name="UserAvatar"
                         Width="32" 
                         Height="32"
-                        DisplayName="用户"/>
+                        ProfilePicture="{x:Bind ViewModel.UserAvatar, Mode=OneWay}"
+                        DisplayName="{x:Bind ViewModel.CurrentUser.Name, Mode=OneWay, FallbackValue=用户}"/>
                 </Button>
             </StackPanel>
 
@@ -126,20 +127,32 @@
             </NavigationView.MenuItems>
 
             <NavigationView.PaneFooter>
-                <StackPanel Margin="16,0,16,16">
-                    <TextBlock 
-                        x:Name="StudentIdText"
-                        FontSize="12"
-                        Opacity="0.8">
+                <StackPanel Margin="16,0,16,16" Spacing="4" HorizontalAlignment="Left">
+                    <TextBlock FontSize="14" Opacity="0.9">
+                        <Run Text="姓名：" />
+                        <Run Text="{x:Bind ViewModel.CurrentUser.Name, Mode=OneWay, TargetNullValue=未知, FallbackValue=未知}" />
+                    </TextBlock>
+                    
+                    <TextBlock FontSize="14" Opacity="0.9">
                         <Run Text="学号：" />
-                        <Run Text="{x:Bind ViewModel.CurrentUser.StudentId, Mode=OneWay, TargetNullValue=--, FallbackValue=--}" />
+                        <Run Text="{x:Bind ViewModel.CurrentUser.StudentId, Mode=OneWay, TargetNullValue=未知, FallbackValue=未知}" />
                     </TextBlock>
                 </StackPanel>
             </NavigationView.PaneFooter>
 
-            <!-- 内容区域 -->
+        <!-- 内容区域 -->
             <Frame x:Name="ContentFrame"/>
         </NavigationView>
+
+        <!-- 用于黄页静默抓取的后台 WebView2 (不要 Collapsed，避免 CoreWebView2 初始化挂起) -->
+        <WebView2
+            x:Name="BackgroundScraperWebView"
+            Width="1"
+            Height="1"
+            Opacity="0"
+            IsHitTestVisible="False"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top" />
     </Grid>
 </Page>
 

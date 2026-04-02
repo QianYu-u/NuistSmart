@@ -1,0 +1,15 @@
+﻿F:\Code\CS\NuistSmart\NuistSmart\ViewModels\ShellViewModel.cs(67,33): error CS4036: “DataWriterStoreOperation”不包含“GetAwaiter”的定义，并且找不到可接受类型为“DataWriterStoreOperation”的第一个参数的扩展方法“GetAwaiter”(是否缺少针对“System”的 using 指令?) [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+F:\Code\CS\NuistSmart\NuistSmart\ViewModels\ShellViewModel.cs(70,29): error CS4036: “IAsyncAction”不包含“GetAwaiter”的定义，并且找不到可接受类型为“IAsyncAction”的第一个参数的扩展方法“GetAwaiter”(是否缺少针对“System”的 using 指令?) [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+F:\Code\CS\NuistSmart\NuistSmart\Views\LoginPage.xaml.cs(317,40): warning CS8600: 将 null 文本或可能的 null 值转换为不可为 null 类型。 [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+C:\Users\death\.nuget\packages\microsoft.windowsappsdk.winui\1.8.251222000\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets(845,9): error MSB3073: 命令“"C:\Users\death\.nuget\packages\microsoft.windowsappsdk.winui\1.8.251222000\buildTransitive\..\tools\net6.0\..\net472\XamlCompiler.exe" "obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\\input.json" "obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\\output.json"”已退出，代码为 1。 [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+
+生成失败。
+
+F:\Code\CS\NuistSmart\NuistSmart\Views\LoginPage.xaml.cs(317,40): warning CS8600: 将 null 文本或可能的 null 值转换为不可为 null 类型。 [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+F:\Code\CS\NuistSmart\NuistSmart\ViewModels\ShellViewModel.cs(67,33): error CS4036: “DataWriterStoreOperation”不包含“GetAwaiter”的定义，并且找不到可接受类型为“DataWriterStoreOperation”的第一个参数的扩展方法“GetAwaiter”(是否缺少针对“System”的 using 指令?) [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+F:\Code\CS\NuistSmart\NuistSmart\ViewModels\ShellViewModel.cs(70,29): error CS4036: “IAsyncAction”不包含“GetAwaiter”的定义，并且找不到可接受类型为“IAsyncAction”的第一个参数的扩展方法“GetAwaiter”(是否缺少针对“System”的 using 指令?) [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+C:\Users\death\.nuget\packages\microsoft.windowsappsdk.winui\1.8.251222000\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets(845,9): error MSB3073: 命令“"C:\Users\death\.nuget\packages\microsoft.windowsappsdk.winui\1.8.251222000\buildTransitive\..\tools\net6.0\..\net472\XamlCompiler.exe" "obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\\input.json" "obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\\output.json"”已退出，代码为 1。 [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+    1 个警告
+    3 个错误
+
+已用时间 00:00:04.34

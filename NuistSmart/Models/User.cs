@@ -1,4 +1,6 @@
-﻿namespace NuistSmart.Models
+using LiteDB;
+
+namespace NuistSmart.Models
 {
     /// <summary>
     /// 用户模型 - 表示一个登录的用户信息
@@ -8,6 +10,7 @@
         /// <summary>
         /// 学号
         /// </summary>
+        [BsonId]
         public string StudentId { get; set; } = string.Empty;
 
         /// <summary>

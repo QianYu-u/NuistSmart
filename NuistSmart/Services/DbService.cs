@@ -16,6 +16,8 @@ public class DbService
 {
     private LiteDatabase? _db;
     private const string CollectionName = "news_cache";
+    private const string CollectionName_Users = "users";
+    private const string CollectionName_Contacts = "contacts";
     private const string DbFileName = "nuistsmart.db";
 
     /// <summary>
@@ -40,6 +42,83 @@ public class DbService
         {
             Debug.WriteLine($"[DbService] 数据库初始化失败: {ex.Message}");
             throw;
+        }
+    }
+
+    /// <summary>
+    /// 获取当前保存的用户信息（获取最新登录的一个用户）
+    /// </summary>
+    public User? GetCurrentUserInfo()
+    {
+        try
+        {
+            if (_db == null) return null;
+            var collection = _db.GetCollection<User>(CollectionName_Users);
+            // 这里简单返回集合里的第一个用户数据或者最后一个插入的数据
+            return collection.FindAll().LastOrDefault();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[DbService] 获取用户信息失败: {ex.Message}");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 保存或更新用户信息
+    /// </summary>
+    public bool SaveUserInfo(User user)
+    {
+        try
+        {
+            if (_db == null) return false;
+            var collection = _db.GetCollection<User>(CollectionName_Users);
+            collection.Upsert(user);
+            Debug.WriteLine($"[DbService] 保存用户信息成功: {user.Name} ({user.StudentId})");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[DbService] 保存用户信息失败: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 批量保存或更新通讯录黄页信息
+    /// </summary>
+    public void SaveContacts(List<ContactCache> contacts)
+    {
+        try
+        {
+            if (_db == null) return;
+            var collection = _db.GetCollection<ContactCache>(CollectionName_Contacts);
+            // 每次拉取都全量覆盖或更新，因为联系人不多，可以先清空再插入，或者全量 Upsert
+            collection.DeleteAll(); // 简单起见，全部清空重新写入
+            collection.InsertBulk(contacts);
+            Debug.WriteLine($"[DbService] 成功保存 {contacts.Count} 条黄页信息");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[DbService] 保存黄页信息失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 获取所有通讯录黄页信息
+    /// </summary>
+    public List<ContactCache> GetAllContacts()
+    {
+        try
+        {
+            if (_db == null) return new List<ContactCache>();
+            var collection = _db.GetCollection<ContactCache>(CollectionName_Contacts);
+            return collection.FindAll().ToList();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[DbService] 获取黄页信息失败: {ex.Message}");
+            return new List<ContactCache>();
         }
     }
 

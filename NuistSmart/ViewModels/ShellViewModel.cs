@@ -1,6 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using NuistSmart.Models;
 using NuistSmart.Services;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -35,13 +36,56 @@ namespace NuistSmart.ViewModels
         }
 
         /// <summary>
+        /// 用户头像 (BitmapImage 或其他 ImageSource)
+        /// </summary>
+        [ObservableProperty]
+        private Microsoft.UI.Xaml.Media.ImageSource? userAvatar;
+
+        /// <summary>
         /// 设置当前登录的用户
         /// 在登录成功后调用
         /// </summary>
-        public void SetCurrentUser(User user)
+        public async void SetCurrentUser(User user)
         {
             CurrentUser = user;
-            WelcomeMessage = $"欢迎，{user.Name} ({user.StudentId})";
+            WelcomeMessage = $"欢迎，{user.Name}";
+
+            // 处理抓取到的 AvatarUrl (可能是 base64 或 http 链接)
+            if (!string.IsNullOrEmpty(user.AvatarUrl))
+            {
+                if (user.AvatarUrl.StartsWith("data:image"))
+                {
+                    try
+                    {
+                        var parts = user.AvatarUrl.Split(',');
+                        if (parts.Length == 2)
+                        {
+                            byte[] imageBytes = System.Convert.FromBase64String(parts[1]);
+                            using var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream();
+                            using (var writer = new Windows.Storage.Streams.DataWriter(stream.GetOutputStreamAt(0)))
+                            {
+                                writer.WriteBytes(imageBytes);
+                                await writer.StoreAsync();
+                            }
+                            var bmp = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage();
+                            await bmp.SetSourceAsync(stream);
+                            UserAvatar = bmp;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.WriteLine($"[ShellViewModel] 头像解析失败: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        UserAvatar = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new System.Uri(user.AvatarUrl));
+                    }
+                    catch { }
+                }
+            }
         }
 
         /// <summary>

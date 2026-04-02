@@ -1,0 +1,14 @@
+﻿  姝ｅ湪纭畾瑕佽繕鍘熺殑椤圭洰鈥?
+  鎵€鏈夐」鐩潎鏄渶鏂扮殑锛屾棤娉曡繕鍘熴€?
+  NuistSmart -> F:\Code\CS\NuistSmart\NuistSmart\bin\Debug\net8.0-windows10.0.19041.0\NuistSmart.dll
+C:\Program Files\dotnet\sdk\10.0.201\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.Publish.targets(217,5): warning NETSDK1198: 鍦ㄩ」鐩腑鎵句笉鍒板悕涓衡€渨in-AnyCPU.pubxml鈥濈殑鍙戝竷閰嶇疆鏂囦欢銆傝灏?PublishProfile 灞炴€ц缃负鏈夋晥鐨勬枃浠跺悕銆?[F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+C:\Users\death\.nuget\packages\microsoft.windows.sdk.buildtools.msix\1.7.20250829.1\build\Microsoft.Windows.SDK.BuildTools.MSIX.Packaging.targets(3866,5): error : Packaged .NET applications with an app host exe cannot be ProcessorArchitecture neutral. Please specify a RuntimeIdentifier or a Platform other than AnyCPU. [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+
+鐢熸垚澶辫触銆?
+
+C:\Program Files\dotnet\sdk\10.0.201\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.Publish.targets(217,5): warning NETSDK1198: 鍦ㄩ」鐩腑鎵句笉鍒板悕涓衡€渨in-AnyCPU.pubxml鈥濈殑鍙戝竷閰嶇疆鏂囦欢銆傝灏?PublishProfile 灞炴€ц缃负鏈夋晥鐨勬枃浠跺悕銆?[F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+C:\Users\death\.nuget\packages\microsoft.windows.sdk.buildtools.msix\1.7.20250829.1\build\Microsoft.Windows.SDK.BuildTools.MSIX.Packaging.targets(3866,5): error : Packaged .NET applications with an app host exe cannot be ProcessorArchitecture neutral. Please specify a RuntimeIdentifier or a Platform other than AnyCPU. [F:\Code\CS\NuistSmart\NuistSmart\NuistSmart.csproj]
+    1 涓鍛?
+    1 涓敊璇?
+
+宸茬敤鏃堕棿 00:00:02.88

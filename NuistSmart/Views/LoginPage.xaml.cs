@@ -2,6 +2,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using NuistSmart.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using NuistSmart.Services;
 using System;
 using System.Diagnostics;
 using Windows.System;
@@ -15,10 +17,13 @@ namespace NuistSmart.Views
     /// </summary>
     public sealed partial class LoginPage : Page
     {
-        /// <summary>
-        /// 从 CAS 表单捕获的学号（通过 JS postMessage 传回）
-        /// </summary>
         private string _capturedStudentId = "";
+        
+        /// <summary>
+        /// 是否正在抓取个人信息，阻止重复重定向
+        /// </summary>
+        private bool _isFetchingProfile = false;
+
         // 使用属性暴露 ViewModel，方便在 XAML 中使用 x:Bind
         // x:Bind 比 Binding 性能更好，因为它是编译时绑定
         public LoginViewModel ViewModel { get; }
@@ -123,17 +128,40 @@ namespace NuistSmart.Views
                             inject();
                         }
 
-                        // ===== 捕获学号：在表单提交时，将用户名通过 postMessage 回传给 C# =====
+                        // ===== 捕获学号：多策略确保在表单提交前拿到用户名 =====
                         function captureUsername() {
+                            var u = document.querySelector('#username');
+                            if (!u) return;
+
+                            function sendId() {
+                                if (u.value) {
+                                    window.chrome.webview.postMessage('STUDENT_ID:' + u.value);
+                                }
+                            }
+
+                            // 策略 1：用户输入时实时捕获
+                            u.addEventListener('input', sendId);
+                            u.addEventListener('change', sendId);
+
+                            // 策略 2：浏览器自动填充检测
+                            setTimeout(sendId, 500);
+                            setTimeout(sendId, 1500);
+
+                            // 策略 3：拦截编程式 form.submit()（CAS 常用此方式加密提交）
                             var form = document.querySelector('form');
                             if (form) {
-                                form.addEventListener('submit', function() {
-                                    var u = document.querySelector('#username');
-                                    if (u && u.value) {
-                                        window.chrome.webview.postMessage('STUDENT_ID:' + u.value);
-                                    }
-                                });
+                                form.addEventListener('submit', sendId);
+                                var origSubmit = form.submit;
+                                form.submit = function() {
+                                    sendId();
+                                    return origSubmit.apply(this, arguments);
+                                };
                             }
+
+                            // 策略 4：监听所有提交按钮点击
+                            document.querySelectorAll('button, input[type=submit], .login_btn').forEach(function(btn) {
+                                btn.addEventListener('click', sendId, true);
+                            });
                         }
                         if (document.readyState === 'loading') {
                             document.addEventListener('DOMContentLoaded', captureUsername);
@@ -156,23 +184,122 @@ namespace NuistSmart.Views
         }
 
         /// <summary>
-        /// 双重事件监听之 NavigationStarting
+        /// 双重事件监听之 NavigationStarting（改为 async 以支持 ExecuteScriptAsync）
         /// </summary>
-        private void CoreWebView2_NavigationStarting(CoreWebView2 sender, CoreWebView2NavigationStartingEventArgs args)
+        private async void CoreWebView2_NavigationStarting(CoreWebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
-            CheckAndInterceptUrl(args.Uri, sender, args);
+            string url = args.Uri;
+            if (string.IsNullOrEmpty(url)) return;
+
+            Debug.WriteLine($"[LoginPage] URL 拦截: {url}");
+
+            // ===== 阶段 1：CAS 表单 POST 提交时，抢先读取学号 =====
+            // 当用户点击登录，CAS 的 JS 会 POST 到 /authserver/login
+            // 此时表单 DOM 还在，可以通过 ExecuteScriptAsync 读取 #username 的值
+            if (url.Contains("authserver/login") && string.IsNullOrEmpty(_capturedStudentId))
+            {
+                try
+                {
+                    // 注意：不能 Cancel 这个 POST，只是趁 DOM 还在时读取学号
+                    string result = await sender.ExecuteScriptAsync(
+                        "document.querySelector('#username')?.value || ''");
+                    if (result != null)
+                    {
+                        // ExecuteScriptAsync 返回 JSON 编码的字符串，如 "\"20231234\""
+                        string sid = result.Trim('"');
+                        if (!string.IsNullOrEmpty(sid))
+                        {
+                            _capturedStudentId = sid;
+                            Debug.WriteLine($"[LoginPage] 已从 DOM 捕获学号: {_capturedStudentId}");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[LoginPage] ExecuteScript 读取学号异常: {ex.Message}");
+                }
+            }
+
+            // ===== 阶段 2：拦截 CAS 登录成功后的重定向，进行后台个人信息抓取 =====
+            if (url.Contains("ticket=ST-") ||
+                url.Contains("i.nuist.edu.cn/login") ||
+                url.Contains("i.nuist.edu.cn/default"))
+            {
+                if (_isFetchingProfile) return;
+
+                // 强制阻断重定向
+                args.Cancel = true;
+                _isFetchingProfile = true;
+
+                // 如果之前未通过 DOM 捕获到学号，最后再试一次
+                if (string.IsNullOrEmpty(_capturedStudentId))
+                {
+                    try
+                    {
+                        string result = await sender.ExecuteScriptAsync(
+                            "document.querySelector('#username')?.value || ''");
+                        if (result != null)
+                        {
+                            string sid = result.Trim('"');
+                            if (!string.IsNullOrEmpty(sid)) _capturedStudentId = sid;
+                        }
+                    }
+                    catch (Exception) {}
+                }
+
+                // 改变 UI 状态为正在获取数据，屏蔽 WebView
+                ViewModel.IsLoading = true;
+                ViewModel.AnnouncementText = "正在获取用户信息...";
+                LoginWebView.Visibility = Visibility.Collapsed;
+                
+                // 注入抓取姓名的脱壳脚本
+                string profileScript = @"
+                    var observer = new MutationObserver(function() {
+                        var nameLabel = document.querySelector('.userinfo-cn');
+                        if (nameLabel) {
+                            var img = document.querySelector('.userinfo img');
+                            var avatar = img && img.src ? img.src : '';
+                            window.chrome.webview.postMessage('PROFILE:' + nameLabel.innerText + '|' + avatar);
+                            observer.disconnect();
+                        }
+                    });
+                    if (document.body) observer.observe(document.body, { childList: true, subtree: true });
+                    else document.addEventListener('DOMContentLoaded', () => observer.observe(document.body, { childList: true, subtree: true }));
+                    
+                    // 超时回退机制
+                    setTimeout(function(){ window.chrome.webview.postMessage('PROFILE_FAIL:'); }, 5000);
+                ";
+
+                await sender.AddScriptToExecuteOnDocumentCreatedAsync(profileScript);
+
+                // 隐式导航到个人中心页抓取 DOM 数据
+                LoginWebView.Source = new Uri("https://authserver.nuist.edu.cn/personalInfo/personCenter/index.html");
+                return;
+            }
         }
 
         /// <summary>
-        /// 双重事件监听之 SourceChanged
+        /// 双重事件监听之 SourceChanged（备用拦截）
         /// </summary>
         private void CoreWebView2_SourceChanged(CoreWebView2 sender, CoreWebView2SourceChangedEventArgs args)
         {
-            CheckAndInterceptUrl(sender.Source, sender, null);
+            string url = sender.Source;
+            if (string.IsNullOrEmpty(url)) return;
+
+            if (url.Contains("ticket=ST-") ||
+                url.Contains("i.nuist.edu.cn/login") ||
+                url.Contains("i.nuist.edu.cn/default"))
+            {
+                if (_isFetchingProfile) return;
+                
+                sender.Stop();
+                // 依赖 NavigationStarting 进行抓取，所以这里直接阻止并等待
+                // 但如果万一漏掉了
+            }
         }
 
         /// <summary>
-        /// 接收来自 CAS 页面 JS 的 postMessage，用于捕获学号
+        /// 接收来自 CAS 页面 JS 的 postMessage，用于捕获学号（备用通道）
         /// </summary>
         private void CoreWebView2_WebMessageReceived(CoreWebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
         {
@@ -182,7 +309,50 @@ namespace NuistSmart.Views
                 if (message?.StartsWith("STUDENT_ID:") == true)
                 {
                     _capturedStudentId = message.Substring("STUDENT_ID:".Length);
-                    Debug.WriteLine($"[LoginPage] 已捕获学号: {_capturedStudentId}");
+                    Debug.WriteLine($"[LoginPage] postMessage 捕获学号: {_capturedStudentId}");
+                }
+                else if (message?.StartsWith("PROFILE:") == true)
+                {
+                    if (_hasNavigatedToShell) return;
+                    string profileData = message.Substring("PROFILE:".Length);
+                    string[] parts = profileData.Split('|');
+                    string name = parts.Length > 0 ? parts[0] : "";
+                    string avatarUrl = parts.Length > 1 ? parts[1] : null;
+
+                    var user = new Models.User 
+                    { 
+                        StudentId = string.IsNullOrEmpty(_capturedStudentId) ? "未知" : _capturedStudentId,
+                        Name = string.IsNullOrEmpty(name) ? "未知" : name,
+                        AvatarUrl = avatarUrl
+                    };
+                    
+                    sender.NavigationStarting -= CoreWebView2_NavigationStarting;
+                    sender.SourceChanged -= CoreWebView2_SourceChanged;
+                    sender.WebMessageReceived -= CoreWebView2_WebMessageReceived;
+
+                    Debug.WriteLine($"[LoginPage] 抓取到用户信息: {user.Name}");
+                    
+                    // 将登录用户信息保存到本地数据库
+                    App.ServiceProvider.GetService<DbService>()?.SaveUserInfo(user);
+
+                    NavigateToShellPage(user);
+                }
+                else if (message?.StartsWith("PROFILE_FAIL:") == true)
+                {
+                    if (_hasNavigatedToShell) return;
+                    var user = new Models.User 
+                    { 
+                        StudentId = string.IsNullOrEmpty(_capturedStudentId) ? "未知" : _capturedStudentId, 
+                        Name = "未知" 
+                    };
+                    sender.NavigationStarting -= CoreWebView2_NavigationStarting;
+                    sender.SourceChanged -= CoreWebView2_SourceChanged;
+                    sender.WebMessageReceived -= CoreWebView2_WebMessageReceived;
+
+                    // 虽然抓取失败，但只要有学号也保存一下（或者作为游客保存）
+                    App.ServiceProvider.GetService<DbService>()?.SaveUserInfo(user);
+                    
+                    NavigateToShellPage(user);
                 }
             }
             catch (Exception ex)
@@ -192,46 +362,20 @@ namespace NuistSmart.Views
         }
 
         /// <summary>
-        /// 核心 URL 检查与阻断跳转逻辑
+        /// 标记是否已经跳转到主页，防抖
         /// </summary>
-        private void CheckAndInterceptUrl(string url, CoreWebView2 webView, CoreWebView2NavigationStartingEventArgs? startArgs)
-        {
-            if (string.IsNullOrEmpty(url)) return;
-
-            // 埋点日志：打印经过的所有 URL
-            Debug.WriteLine($"[LoginPage] URL 拦截: {url}");
-
-            // 检查是否命中 CAS 登录成功的特征参数与跳转路由
-            if (url.Contains("ticket=ST-") || 
-                url.Contains("i.nuist.edu.cn/login") || 
-                url.Contains("i.nuist.edu.cn/default"))
-            {
-                // 强制阻断，阻止后续网页加载与跳转
-                if (startArgs != null)
-                {
-                    startArgs.Cancel = true;
-                }
-                webView.Stop();
-
-                // 立刻注销事件监听，防止重定向循环导致重复触发
-                webView.NavigationStarting -= CoreWebView2_NavigationStarting;
-                webView.SourceChanged -= CoreWebView2_SourceChanged;
-                webView.WebMessageReceived -= CoreWebView2_WebMessageReceived;
-
-                // 使用从 CAS 表单捕获的学号（由 JS postMessage 回传）
-                var user = new Models.User { StudentId = _capturedStudentId };
-                Debug.WriteLine($"[LoginPage] 导航到主界面，学号: {_capturedStudentId}");
-                
-                // 执行页面跳转回原生 UI 界面
-                NavigateToShellPage(user);
-            }
-        }
+        private bool _hasNavigatedToShell = false;
 
         /// <summary>
         /// 跳转回 ShellPage，包含 Frame 空值兼容处理
         /// </summary>
         private void NavigateToShellPage(Models.User user)
         {
+            if (_hasNavigatedToShell) return;
+            _hasNavigatedToShell = true;
+
+            Debug.WriteLine($"[LoginPage] 准备跳转 ShellPage，用户: {user.Name} ({user.StudentId})");
+
             Frame? rootFrame = this.Frame;
 
             // 检查 this.Frame 是否为 null。若为 null，则通过可视化层级树获取根 Frame 进行跳转，防止指令失效
@@ -248,6 +392,7 @@ namespace NuistSmart.Views
             if (rootFrame != null)
             {
                 rootFrame.Navigate(typeof(ShellPage), user);
+                Debug.WriteLine("[LoginPage] 已调用 Frame.Navigate -> ShellPage");
             }
             else
             {
