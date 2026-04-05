@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace NuistSmart.Models
 {
@@ -17,7 +18,8 @@ namespace NuistSmart.Models
     public class BusRunItem
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString)]
+        public int Id { get; set; }
 
         [JsonPropertyName("start")]
         public string? Start { get; set; }
@@ -30,5 +32,25 @@ namespace NuistSmart.Models
 
         [JsonPropertyName("departureTime")]
         public string? DepartureTime { get; set; }
+    }
+
+    public partial class BusRunDisplay : ObservableObject
+    {
+        public string Id { get; set; } = "";
+
+        [ObservableProperty]
+        private string _displayText = "";
+
+        public string DepartureTime { get; set; } = "";
+
+        [ObservableProperty]
+        private int _remainSeats;
+
+        [ObservableProperty]
+        private bool _isSelected;
+
+        public string Start { get; set; } = "";
+        
+        public string End { get; set; } = "";
     }
 }

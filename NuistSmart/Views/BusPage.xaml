@@ -5,11 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:NuistSmart.ViewModels"
+    xmlns:models="using:NuistSmart.Models"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Padding="24" RowSpacing="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -17,44 +19,76 @@
         <!-- 配置区域 -->
         <StackPanel Grid.Row="0" Spacing="16">
             <TextBlock Text="校园巴士自动抢票" Style="{ThemeResource TitleTextBlockStyle}" FontWeight="SemiBold" />
-            <TextBlock Text="当启动任务后，请在微信端手动打开一次校车预约页面以获取认证 Token。" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            <TextBlock Text="选择路线和日期后，点击&quot;获取班次&quot;查看可用班车，勾选要抢的班次后点击&quot;开始抢票&quot;" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
             <Grid ColumnSpacing="20" RowSpacing="16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <ComboBox Grid.Row="0" Grid.Column="0" Header="始发站" ItemsSource="{x:Bind ViewModel.StationList}" SelectedItem="{x:Bind ViewModel.TargetStart, Mode=TwoWay}" HorizontalAlignment="Stretch" />
                 <ComboBox Grid.Row="0" Grid.Column="1" Header="终点站" ItemsSource="{x:Bind ViewModel.StationList}" SelectedItem="{x:Bind ViewModel.TargetEnd, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                <Button Grid.Row="0" Grid.Column="2" Content="获取班次" Command="{x:Bind ViewModel.GetAvailableBusesCommand}" VerticalAlignment="Bottom" Width="120" Style="{ThemeResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.IsNotProcessing, Mode=OneWay}">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="G" Modifiers="Control"/>
+                    </Button.KeyboardAccelerators>
+                </Button>
 
-                <TextBox Grid.Row="1" Grid.Column="0" Header="目标日期 (例如：2026-01-12，留空为今天)" Text="{x:Bind ViewModel.TargetDate, Mode=TwoWay}" />
-                
-                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="12">
-                    <TextBox Header="具体时间 (如 12:30)" Text="{x:Bind ViewModel.TargetSpecificTime, Mode=TwoWay}" Width="160" PlaceholderText="精确匹配" />
-                    <TextBox Header="宽松时段 (如 12,13)" Text="{x:Bind ViewModel.TargetHourRange, Mode=TwoWay}" Width="160" PlaceholderText="多个用逗号隔开" />
-                </StackPanel>
-
-                <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Header="认证 Token" Text="{x:Bind ViewModel.UserToken, Mode=TwoWay}" PlaceholderText="留空则尝试自动抓包，如果您抓包报错或已自行抓捕，请直接于此处填入您的 Token" />
+                <TextBox Grid.Row="1" Grid.Column="0" Header="目标日期 (例如：2026-04-05)" Text="{x:Bind ViewModel.TargetDate, Mode=TwoWay}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Header="认证 Token (留空自动抓包)" Text="{x:Bind ViewModel.UserToken, Mode=TwoWay}" PlaceholderText="留空则尝试自动抓包，如果报错或已自行抓取，请直接填入 Token" />
             </Grid>
 
+            <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsLoadingBuses, Mode=OneWay}" Margin="0,8,0,0" />
+        </StackPanel>
+
+        <!-- 班次选择区域 -->
+        <StackPanel Grid.Row="1" Spacing="12" Visibility="{x:Bind ViewModel.HasBusesLoaded, Mode=OneWay}">
+            <Grid>
+                <TextBlock Text="可用班次 (请勾选要抢的班次)" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                    <Button Content="全选" Command="{x:Bind ViewModel.SelectAllBusesCommand}" Width="80" Height="32" FontSize="12"/>
+                    <Button Content="清空" Command="{x:Bind ViewModel.ClearSelectionCommand}" Width="80" Height="32" FontSize="12"/>
+                </StackPanel>
+            </Grid>
+
+            <Border Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" Padding="12" MaxHeight="200">
+                <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.AvailableBuses, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:BusRunDisplay">
+                                <CheckBox Content="{x:Bind DisplayText, Mode=OneWay}" 
+                                          IsChecked="{x:Bind IsSelected, Mode=TwoWay}" 
+                                          FontFamily="Consolas" 
+                                          FontSize="14" 
+                                          Margin="0,4"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
             <!-- 操作按钮 -->
-            <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,8,0,0">
-                <Button Content="开始启动" Command="{x:Bind ViewModel.StartProcessCommand}" Style="{ThemeResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.IsNotProcessing, Mode=OneWay}" Width="120" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Content="开始抢票" Command="{x:Bind ViewModel.StartProcessCommand}" Style="{ThemeResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.IsNotProcessing, Mode=OneWay}" Width="120">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="S" Modifiers="Control"/>
+                    </Button.KeyboardAccelerators>
+                </Button>
                 <Button Content="强制停止" Command="{x:Bind ViewModel.StopProcessCommand}" IsEnabled="{x:Bind ViewModel.IsProcessing, Mode=OneWay}" Width="100" />
                 <Button Content="清除日志" Command="{x:Bind ViewModel.ClearLogsCommand}" Width="100" />
             </StackPanel>
 
-            <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsProcessing, Mode=OneWay}" Margin="0,8,0,0" />
+            <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsProcessing, Mode=OneWay}" />
         </StackPanel>
 
         <!-- 日志输出终端区域 -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>

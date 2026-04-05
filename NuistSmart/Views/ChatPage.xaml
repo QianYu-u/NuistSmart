@@ -5,72 +5,209 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:models="using:NuistSmart.Models"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid Padding="24">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Page.Resources>
+        <!-- 消息项样式 -->
+        <DataTemplate x:Key="MessageItemTemplate" x:DataType="models:ChatMessage">
+            <Grid Margin="0,8">
+                <!-- 用户消息（右侧，蓝色背景） -->
+                <Border HorizontalAlignment="Right" MaxWidth="600" Background="{ThemeResource SystemAccentColor}" 
+                        CornerRadius="8" Padding="12" Margin="40,0,0,0">
+                    <Border.Visibility>
+                        <Binding Path="Role" Converter="{StaticResource StringEqualityToVisibilityConverter}" ConverterParameter="user"/>
+                    </Border.Visibility>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{x:Bind Content}" 
+                                  TextWrapping="Wrap" 
+                                  Foreground="White"
+                                  IsTextSelectionEnabled="True"/>
+                        <TextBlock Text="{x:Bind Timestamp}" 
+                                  Style="{ThemeResource CaptionTextBlockStyle}" 
+                                  Foreground="White" 
+                                  Opacity="0.8" 
+                                  HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Border>
 
-        <!-- 标题 -->
-        <StackPanel Grid.Row="0" Spacing="4" Margin="0,0,0,24">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-                <FontIcon Glyph="&#xE8F2;" FontSize="24" Foreground="{ThemeResource SystemAccentColor}" VerticalAlignment="Center"/>
-                <TextBlock Text="智能对话" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
-            </StackPanel>
-            <TextBlock Text="在这里询问关于校园公告的信息。例如：“昨天有什么新公告？”" 
-                       Style="{ThemeResource BodyTextBlockStyle}" 
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-        </StackPanel>
+                <!-- AI消息（左侧，灰色背景） -->
+                <Border HorizontalAlignment="Left" MaxWidth="600" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                        BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8" Padding="12" Margin="0,0,40,0">
+                    <Border.Visibility>
+                        <Binding Path="Role" Converter="{StaticResource StringEqualityToVisibilityConverter}" ConverterParameter="assistant"/>
+                    </Border.Visibility>
+                    <StackPanel Spacing="4">
+                        <controls:MarkdownTextBlock Text="{x:Bind Content}" 
+                                                   TextWrapping="Wrap"
+                                                   Background="Transparent"
+                                                   IsTextSelectionEnabled="True"/>
+                        <TextBlock Text="{x:Bind Timestamp}" 
+                                  Style="{ThemeResource CaptionTextBlockStyle}" 
+                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                  HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </DataTemplate>
 
-        <!-- 提示栏 -->
-        <InfoBar Grid.Row="1" IsOpen="True" Severity="Informational" Title="提示"
-                 Message="AI 助手的信息来源于本地数据库，请先在“信息公告”页面刷新以获取最新缓存。"
-                 Margin="0,0,0,24"/>
+        <!-- 会话项样式 -->
+        <DataTemplate x:Key="SessionItemTemplate" x:DataType="models:ChatSession">
+            <Grid Padding="12,8" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- AI 回答展示 -->
-        <ScrollViewer Grid.Row="2" Background="{ThemeResource LayerFillColorDefaultBrush}" 
-                      CornerRadius="8" BorderThickness="1" BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
-                      Padding="20">
-            <StackPanel Spacing="16">
-                <!-- 加载中 -->
-                <StackPanel Orientation="Horizontal" Spacing="12"
-                            Visibility="{x:Bind ViewModel.IsAskingAi, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
-                    <ProgressRing Width="20" Height="20" IsActive="True"/>
-                    <TextBlock Text="AI 助手正在思考..." Style="{ThemeResource BodyStrongTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <StackPanel Grid.Column="0" Spacing="4">
+                    <TextBlock Text="{x:Bind Title}" 
+                              Style="{ThemeResource BodyStrongTextBlockStyle}"
+                              TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{x:Bind UpdateTime}" 
+                              Style="{ThemeResource CaptionTextBlockStyle}"
+                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
+
+                <Button Grid.Column="1"
+                        Command="{Binding ElementName=PageRoot, Path=ViewModel.DeleteSessionCommand}"
+                        CommandParameter="{x:Bind}"
+                        Background="Transparent"
+                        VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE74D;" FontSize="14"/>
+                </Button>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid x:Name="PageRoot" Padding="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 主对话区 -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- 标题栏（添加历史面板按钮） -->
+            <Grid Grid.Row="0" Margin="0,0,0,24">
+                <StackPanel Spacing="4">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE8F2;" FontSize="24" Foreground="{ThemeResource SystemAccentColor}" VerticalAlignment="Center"/>
+                        <TextBlock Text="智能对话" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock Text="支持上下文对话，AI可以记住最近5轮对话内容" 
+                               Style="{ThemeResource BodyTextBlockStyle}" 
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+
+                <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Command="{x:Bind ViewModel.ToggleHistoryPanelCommand}"
+                        Background="Transparent">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE81C;" FontSize="16"/>
+                        <TextBlock Text="历史记录"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- 提示栏 -->
+            <InfoBar Grid.Row="1" IsOpen="True" Severity="Informational" Title="提示"
+                     Message="AI 助手的信息来源于本地数据库，支持上下文对话（记住最近5轮）和会话管理。"
+                     Margin="0,0,0,24"/>
+
+            <!-- 消息列表 -->
+            <ScrollViewer x:Name="MessageScrollViewer" Grid.Row="2" 
+                         Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                         CornerRadius="8" 
+                         BorderThickness="1" 
+                         BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                         Padding="20">
+                <ItemsControl ItemsSource="{x:Bind ViewModel.MessageHistory, Mode=OneWay}"
+                             ItemTemplate="{StaticResource MessageItemTemplate}"/>
+            </ScrollViewer>
+
+            <!-- 底部输入框 -->
+            <Grid Grid.Row="3" Margin="0,20,0,0" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0"
+                         Text="{x:Bind ViewModel.UserQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         PlaceholderText="发送消息给智能助手..."
+                         IsEnabled="{x:Bind ViewModel.IsAskingAi, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                         AcceptsReturn="True" MaxHeight="100"/>
+
+                <Button Grid.Column="1"
+                        Command="{x:Bind ViewModel.AskAiCommand}"
+                        Style="{StaticResource AccentButtonStyle}"
+                        VerticalAlignment="Bottom" Height="34" Width="80"
+                        IsEnabled="{x:Bind ViewModel.IsAskingAi, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE724;" FontSize="14"/>
+                        <TextBlock Text="发送"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <!-- 历史面板（右侧可折叠） -->
+        <Grid Grid.Column="1" Width="300" Margin="24,0,0,0"
+              Visibility="{x:Bind ViewModel.IsHistoryPanelOpen, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- 历史面板标题 -->
+            <StackPanel Grid.Row="0" Spacing="12" Margin="0,0,0,16">
+                <TextBlock Text="会话历史" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                 
-                <!-- 回答文本 -->
-                <controls:MarkdownTextBlock Text="{x:Bind ViewModel.AiAnswer, Mode=OneWay}" 
-                           TextWrapping="Wrap" IsTextSelectionEnabled="True"
-                           Background="Transparent" />
+                <Button Command="{x:Bind ViewModel.NewSessionCommand}"
+                        HorizontalAlignment="Stretch"
+                        Style="{StaticResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE710;" FontSize="14"/>
+                        <TextBlock Text="新建会话"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
-        </ScrollViewer>
 
-        <!-- 底部输入框 -->
-        <Grid Grid.Row="3" Margin="0,20,0,0" ColumnSpacing="12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <!-- 会话列表 -->
+            <ScrollViewer Grid.Row="1">
+                <ListView ItemsSource="{x:Bind ViewModel.SessionList, Mode=OneWay}"
+                         ItemTemplate="{StaticResource SessionItemTemplate}"
+                         SelectionMode="Single"
+                         IsItemClickEnabled="True"
+                         ItemClick="SessionList_ItemClick">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </ScrollViewer>
 
-            <TextBox Grid.Column="0"
-                     Text="{x:Bind ViewModel.UserQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     PlaceholderText="发送消息给智能助手..."
-                     IsEnabled="{x:Bind ViewModel.IsAskingAi, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
-                     AcceptsReturn="True" MaxHeight="100"/>
-
-            <Button Grid.Column="1"
-                    Command="{x:Bind ViewModel.AskAiCommand}"
-                    Style="{StaticResource AccentButtonStyle}"
-                    VerticalAlignment="Bottom" Height="34" Width="80">
-                <StackPanel Orientation="Horizontal" Spacing="6">
-                    <FontIcon Glyph="&#xE724;" FontSize="14"/>
-                    <TextBlock Text="发送"/>
+            <!-- 清空按钮 -->
+            <Button Grid.Row="2" 
+                    Command="{x:Bind ViewModel.ClearAllSessionsCommand}"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,16,0,0">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE75C;" FontSize="14"/>
+                    <TextBlock Text="清空所有会话"/>
                 </StackPanel>
             </Button>
         </Grid>

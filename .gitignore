@@ -368,6 +368,10 @@ err*.txt
 *error*.txt
 verbose_*.txt
 *_backup.txt
+msbuild.txt
+
+# 临时脚本（用于本地日志提取）
+extract.ps1
 
 # C#/.NET 基础忽略目录（如原文件无此项，需补充）
 bin/

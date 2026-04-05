@@ -39,30 +39,64 @@ namespace NuistSmart.Services
             return request;
         }
 
-        public async Task StartPollingAsync(
+        public async Task<List<BusRunItem>> GetBusListAsync(
             string token,
             string targetStart,
             string targetEnd,
             string targetDate,
-            string targetSpecificTime,
-            string targetHourRangeStr,
             Action<string> logCallback,
             CancellationToken cancellationToken)
         {
-            logCallback($"=== 抢票轮询启动 | 目标: {targetStart} -> {targetEnd} ===");
-
-            var hourRanges = new List<int>();
-            if (!string.IsNullOrWhiteSpace(targetHourRangeStr))
+            try
             {
-                var parts = targetHourRangeStr.Split(new[] { ',', '，' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var p in parts)
+                logCallback($"正在获取班次列表: {targetStart} -> {targetEnd}, 日期: {targetDate}");
+                
+                var req = CreateRequest(API_LIST_URL, token);
+                var response = await _httpClient.SendAsync(req, cancellationToken);
+                response.EnsureSuccessStatusCode();
+
+                var strResult = await response.Content.ReadAsStringAsync();
+                logCallback($"API 响应: {strResult.Substring(0, Math.Min(200, strResult.Length))}...");
+                
+                var resJson = JsonSerializer.Deserialize<BusResponse<List<BusRunItem>>>(strResult, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (resJson != null && resJson.Code == 0 && resJson.Data != null)
                 {
-                    if (int.TryParse(p.Trim(), out int h))
-                    {
-                        hourRanges.Add(h);
-                    }
+                    var filteredBuses = resJson.Data
+                        .Where(bus => bus.Start == targetStart && bus.End == targetEnd)
+                        .Where(bus =>
+                        {
+                            if (string.IsNullOrWhiteSpace(targetDate)) return true;
+                            if (string.IsNullOrWhiteSpace(bus.DepartureTime)) return false;
+                            string[] parts = bus.DepartureTime.Split(' ');
+                            return parts.Length > 0 && parts[0] == targetDate;
+                        })
+                        .ToList();
+
+                    logCallback($"找到 {filteredBuses.Count} 个符合条件的班次");
+                    return filteredBuses;
+                }
+                else
+                {
+                    logCallback($"获取班次失败: {resJson?.Msg ?? "未知错误"}");
+                    return new List<BusRunItem>();
                 }
             }
+            catch (Exception ex)
+            {
+                string detailedError = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                logCallback($"获取班次异常: {detailedError}");
+                return new List<BusRunItem>();
+            }
+        }
+
+        public async Task StartPollingAsync(
+            string token,
+            List<string> targetBusIds,
+            Action<string> logCallback,
+            CancellationToken cancellationToken)
+        {
+            logCallback($"=== 抢票轮询启动 | 监控 {targetBusIds.Count} 个班次 ===");
 
             var random = new Random();
 
@@ -70,7 +104,7 @@ namespace NuistSmart.Services
             {
                 try
                 {
-                    bool success = await CheckTicketAsync(token, targetStart, targetEnd, targetDate, targetSpecificTime, hourRanges, logCallback, cancellationToken);
+                    bool success = await CheckTicketAsync(token, targetBusIds, logCallback, cancellationToken);
                     if (success)
                     {
                         break;
@@ -97,11 +131,7 @@ namespace NuistSmart.Services
 
         private async Task<bool> CheckTicketAsync(
             string token,
-            string targetStart,
-            string targetEnd,
-            string targetDate,
-            string targetSpecificTime,
-            List<int> hourRanges,
+            List<string> targetBusIds,
             Action<string> logCallback,
             CancellationToken cancellationToken)
         {
@@ -118,41 +148,16 @@ namespace NuistSmart.Services
 
                 foreach (var bus in resJson.Data)
                 {
-                    if (bus.Start != targetStart || bus.End != targetEnd) continue;
+                    // 只检查目标班次列表中的班车
+                    if (!targetBusIds.Contains(bus.Id.ToString())) continue;
 
                     string fullTime = bus.DepartureTime ?? "";
-                    if (string.IsNullOrWhiteSpace(fullTime) || !fullTime.Contains(" ")) continue;
-
-                    string[] dateTimeParts = fullTime.Split(' ');
-                    string datePart = dateTimeParts[0];
-                    string timePart = dateTimeParts[1];
-                    string[] timeSplit = timePart.Split(':');
-                    if (timeSplit.Length == 0 || !int.TryParse(timeSplit[0], out int hourPart)) continue;
-
-                    if (!string.IsNullOrWhiteSpace(targetDate) && datePart != targetDate) continue;
-
-                    bool isTimeMatch = false;
-                    if (!string.IsNullOrWhiteSpace(targetSpecificTime))
-                    {
-                        if (timePart.StartsWith(targetSpecificTime)) isTimeMatch = true;
-                    }
-                    else if (hourRanges.Any())
-                    {
-                        if (hourRanges.Contains(hourPart)) isTimeMatch = true;
-                    }
-                    else
-                    {
-                        isTimeMatch = true;
-                    }
-
-                    if (!isTimeMatch) continue;
-
-                    logCallback($"  > 命中目标: {fullTime} | 余票: {bus.Remain}");
+                    logCallback($"  > 监控班次: {fullTime} | 余票: {bus.Remain}");
 
                     if (bus.Remain > 0)
                     {
                         logCallback("  ★ 发现目标余票！准备触发自动化秒杀！ ★");
-                        return await BookTicketAsync(token, bus.Id!, fullTime, logCallback, cancellationToken);
+                        return await BookTicketAsync(token, bus.Id.ToString(), fullTime, logCallback, cancellationToken);
                     }
                 }
             }

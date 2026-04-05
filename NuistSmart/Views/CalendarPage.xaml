@@ -4,101 +4,264 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:NuistSmart.ViewModels"
+    xmlns:converters="using:NuistSmart.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <converters:HexToBrushConverter x:Key="HexColor"/>
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
+
+        <!-- 单日格子模板 -->
+        <DataTemplate x:Key="DayTemplate" x:DataType="viewmodels:CalendarDayViewModel">
+            <Border Background="{Binding BgColorHex, Converter={StaticResource HexColor}}"
+                    BorderThickness="1" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
+                    MinHeight="56" Padding="0,4" Margin="1">
+                
+                <Grid Visibility="{Binding IsEmpty, Converter={StaticResource InverseBoolToVis}}">
+                    <!-- Today Highlight -->
+                    <Ellipse Fill="{ThemeResource SystemAccentColorLight2}" 
+                             Visibility="{Binding IsToday, Converter={StaticResource BoolToVis}}" 
+                             Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,-2,0,0"/>
+                    
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding DateNumber}" 
+                                   Foreground="{Binding NameColorHex, Converter={StaticResource HexColor}}"
+                                   FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                        
+                        <TextBlock Text="{Binding LunarText}" 
+                                   Foreground="{Binding LunarColorHex, Converter={StaticResource HexColor}}"
+                                   FontSize="10" HorizontalAlignment="Center" TextWrapping="NoWrap" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- 周行模板 -->
+        <DataTemplate x:Key="SemesterTemplate" x:DataType="viewmodels:CalendarWeekRowViewModel">
+            <Grid Margin="0,0,0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" /> <!-- Month -->
+                    <ColumnDefinition Width="40" /> <!-- Week -->
+                    <ColumnDefinition Width="*" />  <!-- MON -->
+                    <ColumnDefinition Width="*" />  <!-- TUE -->
+                    <ColumnDefinition Width="*" />  <!-- WED -->
+                    <ColumnDefinition Width="*" />  <!-- THU -->
+                    <ColumnDefinition Width="*" />  <!-- FRI -->
+                    <ColumnDefinition Width="*" />  <!-- SAT -->
+                    <ColumnDefinition Width="*" />  <!-- SUN -->
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{Binding MonthName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14"/>
+                
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding WeekName}" HorizontalAlignment="Center" FontSize="14" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding WeekSup}" HorizontalAlignment="Center" FontSize="10" Opacity="0.6"/>
+                </StackPanel>
+
+                <ContentPresenter Grid.Column="2" Content="{Binding Mon}" ContentTemplate="{StaticResource DayTemplate}"/>
+                <ContentPresenter Grid.Column="3" Content="{Binding Tue}" ContentTemplate="{StaticResource DayTemplate}"/>
+                <ContentPresenter Grid.Column="4" Content="{Binding Wed}" ContentTemplate="{StaticResource DayTemplate}"/>
+                <ContentPresenter Grid.Column="5" Content="{Binding Thu}" ContentTemplate="{StaticResource DayTemplate}"/>
+                <ContentPresenter Grid.Column="6" Content="{Binding Fri}" ContentTemplate="{StaticResource DayTemplate}"/>
+                <ContentPresenter Grid.Column="7" Content="{Binding Sat}" ContentTemplate="{StaticResource DayTemplate}"/>
+                <ContentPresenter Grid.Column="8" Content="{Binding Sun}" ContentTemplate="{StaticResource DayTemplate}"/>
+            </Grid>
+        </DataTemplate>
+
+        <!-- 列表头模板（在代码里复用） -->
+        <Style x:Key="WeekHeaderStyle" TargetType="Grid">
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+    </Page.Resources>
+
     <Grid Padding="24">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>  <!-- 标题行 -->
+            <RowDefinition Height="Auto"/>  <!-- 放假 Banner -->
+            <RowDefinition Height="Auto"/>  <!-- 进度条 -->
+            <RowDefinition Height="*"/>     <!-- 日历网格 -->
         </Grid.RowDefinitions>
 
-        <!-- 标题 -->
-        <TextBlock 
-            Grid.Row="0"
-            Text="校历假期"
-            FontSize="28"
-            FontWeight="Bold"
-            Margin="0,0,0,16"/>
+        <!-- ══ 头部信息 ══ -->
+        <RelativePanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock x:Name="TitleText" Text="{x:Bind ViewModel.HeaderText, Mode=OneWay}" FontSize="28" FontWeight="Bold"/>
+            
+            <StackPanel Orientation="Horizontal" RelativePanel.AlignRightWithPanel="True" Spacing="4">
+                <Button Content="&#xE72B;" FontFamily="Segoe Fluent Icons" Background="Transparent" 
+                        Command="{x:Bind ViewModel.PreviousYearCommand}" ToolTipService.ToolTip="上一学年"/>
+                
+                <TextBlock Text="{x:Bind ViewModel.SchoolYearText, Mode=OneWay}" VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold" Margin="12,0"/>
+                
+                <Button Content="&#xE72A;" FontFamily="Segoe Fluent Icons" Background="Transparent" 
+                        Command="{x:Bind ViewModel.NextYearCommand}" ToolTipService.ToolTip="下一学年"/>
+                
+                <Button Command="{x:Bind ViewModel.RefreshCommand}" Background="Transparent" Margin="8,0,0,0" ToolTipService.ToolTip="强制刷新">
+                    <FontIcon Glyph="&#xE72C;" FontSize="14"/>
+                </Button>
+            </StackPanel>
 
-        <!-- 刷新按钮和状态 -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12" Margin="0,0,0,16">
-            <Button 
-                x:Name="RefreshButton"
-                Click="RefreshButton_Click">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="&#xE72C;" FontSize="16"/>
-                    <TextBlock Text="刷新假期数据" VerticalAlignment="Center"/>
+            <TextBlock x:Name="SubtitleText" Text="{x:Bind ViewModel.TodayInfoText, Mode=OneWay}" 
+                       RelativePanel.Below="TitleText" FontSize="14" Opacity="0.7" Margin="0,4,0,0"/>
+        </RelativePanel>
+
+        <!-- ══ 放假倒计时 Banner ══ -->
+        <Border Grid.Row="1"
+                Visibility="{x:Bind ViewModel.HasHolidayInfo, Mode=OneWay, Converter={StaticResource BoolToVis}}"
+                CornerRadius="12" Margin="0,0,0,16" Padding="20,14">
+            <Border.Background>
+                <!-- 正在放假：绿色渐变；即将放假：橙色渐变 -->
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#FF6B35" Offset="0"/>
+                    <GradientStop Color="#F7931E" Offset="0.5"/>
+                    <GradientStop Color="#FFD166" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind ViewModel.HolidayBannerTitle, Mode=OneWay}"
+                               FontSize="18" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="{x:Bind ViewModel.HolidayBannerSubtitle, Mode=OneWay}"
+                               FontSize="13" Foreground="White" Opacity="0.9" Margin="0,4,0,0"/>
                 </StackPanel>
-            </Button>
-            
-            <ProgressRing 
-                x:Name="LoadingRing"
-                Width="24"
-                Height="24"
-                IsActive="False"
-                Visibility="Collapsed"/>
-            
-            <TextBlock 
-                x:Name="StatusText"
-                VerticalAlignment="Center"
-                Foreground="{ThemeResource SystemAccentColor}"/>
-        </StackPanel>
+                <!-- 右侧图标装饰 -->
+                <FontIcon Grid.Column="1" Glyph="&#xE77B;" FontSize="36" Foreground="White" Opacity="0.35"
+                          VerticalAlignment="Center" Margin="16,0,0,0"/>
+            </Grid>
+        </Border>
 
-        <!-- 假期列表 -->
-        <ScrollViewer Grid.Row="2">
-            <ItemsControl x:Name="HolidaysItemsControl">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border 
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            CornerRadius="8"
-                            Padding="16"
-                            Margin="0,0,0,12">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+        <!-- ══ 加载状态 ══ -->
+        <ProgressBar Grid.Row="2" IsIndeterminate="True" 
+                     Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource BoolToVis}}" 
+                     Margin="0,0,0,12"/>
 
-                                <!-- 日期 -->
-                                <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                                    <TextBlock 
-                                        Text="{Binding DateText}"
-                                        FontSize="16"
-                                        FontWeight="SemiBold"/>
-                                    <TextBlock 
-                                        Text="{Binding DayOfWeekText}"
-                                        FontSize="12"
-                                        Opacity="0.7"/>
-                                </StackPanel>
+        <!-- ══ 日历网格 ══ -->
+        <ScrollViewer Grid.Row="3">
+            <StackPanel Spacing="16">
 
-                                <!-- 假期名称 -->
-                                <TextBlock 
-                                    Grid.Column="1"
-                                    Text="{Binding Name}"
-                                    FontSize="16"
-                                    VerticalAlignment="Center"/>
-
-                                <!-- 长假标记 -->
-                                <Border 
-                                    Grid.Column="2"
-                                    Background="{ThemeResource AccentFillColorDefaultBrush}"
-                                    CornerRadius="4"
-                                    Padding="8,4"
-                                    Visibility="{Binding LongVacationVisibility}">
-                                    <TextBlock 
-                                        Text="长假"
-                                        FontSize="12"
-                                        Foreground="White"/>
+                <!-- ▶ 第一学期 -->
+                <StackPanel>
+                    <!-- 学期标题行（可点击展开/折叠） -->
+                    <Button Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                            Command="{x:Bind ViewModel.ToggleSemester1Command}" Padding="0,8,0,8" Margin="0,0,0,8"
+                            CornerRadius="8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="第一学期" FontSize="18" FontWeight="Bold"
+                                           Foreground="{ThemeResource SystemAccentColor}"
+                                           VerticalAlignment="Center"/>
+                                <!-- 「当前」徽章 -->
+                                <Border Visibility="{x:Bind ViewModel.IsSemester1Current, Mode=OneWay, Converter={StaticResource BoolToVis}}"
+                                        Background="{ThemeResource SystemAccentColorLight2}"
+                                        CornerRadius="10" Padding="8,3">
+                                    <TextBlock Text="当前" FontSize="11" FontWeight="SemiBold" Foreground="White"/>
                                 </Border>
+                            </StackPanel>
+                            <!-- 展开/折叠箭头 -->
+                            <Grid Grid.Column="1" VerticalAlignment="Center" Margin="0,0,4,0">
+                                <!-- 展开时显示向下箭头 -->
+                                <FontIcon Glyph="&#xE70D;" FontSize="12" Opacity="0.6"
+                                          Visibility="{x:Bind ViewModel.IsSemester1Expanded, Mode=OneWay, Converter={StaticResource BoolToVis}}"/>
+                                <!-- 折叠时显示向右箭头 -->
+                                <FontIcon Glyph="&#xE76C;" FontSize="12" Opacity="0.6"
+                                          Visibility="{x:Bind ViewModel.IsSemester1Expanded, Mode=OneWay, Converter={StaticResource InverseBoolToVis}}"/>
                             </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                        </Grid>
+                    </Button>
+
+                    <!-- 第一学期内容 -->
+                    <StackPanel Visibility="{x:Bind ViewModel.IsSemester1Expanded, Mode=OneWay, Converter={StaticResource BoolToVis}}">
+                        <!-- 列头 -->
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="月份" HorizontalAlignment="Center" Opacity="0.6" FontSize="12"/>
+                            <TextBlock Grid.Column="1" Text="周次" HorizontalAlignment="Center" Opacity="0.6" FontSize="12"/>
+                            <TextBlock Grid.Column="2" Text="一" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="3" Text="二" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="4" Text="三" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="5" Text="四" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="6" Text="五" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="7" Text="六" HorizontalAlignment="Center" FontWeight="Bold" Foreground="#EF971C"/>
+                            <TextBlock Grid.Column="8" Text="日" HorizontalAlignment="Center" FontWeight="Bold" Foreground="#EF971C"/>
+                        </Grid>
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.Semester1Weeks, Mode=OneWay}" ItemTemplate="{StaticResource SemesterTemplate}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- ▶ 第二学期 -->
+                <StackPanel>
+                    <!-- 学期标题行（可点击展开/折叠） -->
+                    <Button Background="Transparent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                            Command="{x:Bind ViewModel.ToggleSemester2Command}" Padding="0,8,0,8" Margin="0,0,0,8"
+                            CornerRadius="8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="第二学期" FontSize="18" FontWeight="Bold"
+                                           Foreground="{ThemeResource SystemAccentColor}"
+                                           VerticalAlignment="Center"/>
+                                <!-- 「当前」徽章 -->
+                                <Border Visibility="{x:Bind ViewModel.IsSemester2Current, Mode=OneWay, Converter={StaticResource BoolToVis}}"
+                                        Background="{ThemeResource SystemAccentColorLight2}"
+                                        CornerRadius="10" Padding="8,3">
+                                    <TextBlock Text="当前" FontSize="11" FontWeight="SemiBold" Foreground="White"/>
+                                </Border>
+                            </StackPanel>
+                            <!-- 展开/折叠箭头 -->
+                            <Grid Grid.Column="1" VerticalAlignment="Center" Margin="0,0,4,0">
+                                <!-- 展开时显示向下箭头 -->
+                                <FontIcon Glyph="&#xE70D;" FontSize="12" Opacity="0.6"
+                                          Visibility="{x:Bind ViewModel.IsSemester2Expanded, Mode=OneWay, Converter={StaticResource BoolToVis}}"/>
+                                <!-- 折叠时显示向右箭头 -->
+                                <FontIcon Glyph="&#xE76C;" FontSize="12" Opacity="0.6"
+                                          Visibility="{x:Bind ViewModel.IsSemester2Expanded, Mode=OneWay, Converter={StaticResource InverseBoolToVis}}"/>
+                            </Grid>
+                        </Grid>
+                    </Button>
+
+                    <!-- 第二学期内容 -->
+                    <StackPanel Visibility="{x:Bind ViewModel.IsSemester2Expanded, Mode=OneWay, Converter={StaticResource BoolToVis}}">
+                        <!-- 列头 -->
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="月份" HorizontalAlignment="Center" Opacity="0.6" FontSize="12"/>
+                            <TextBlock Grid.Column="1" Text="周次" HorizontalAlignment="Center" Opacity="0.6" FontSize="12"/>
+                            <TextBlock Grid.Column="2" Text="一" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="3" Text="二" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="4" Text="三" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="5" Text="四" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="6" Text="五" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="7" Text="六" HorizontalAlignment="Center" FontWeight="Bold" Foreground="#EF971C"/>
+                            <TextBlock Grid.Column="8" Text="日" HorizontalAlignment="Center" FontWeight="Bold" Foreground="#EF971C"/>
+                        </Grid>
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.Semester2Weeks, Mode=OneWay}" ItemTemplate="{StaticResource SemesterTemplate}"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </StackPanel>
         </ScrollViewer>
     </Grid>
 </Page>

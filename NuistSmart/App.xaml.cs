@@ -70,6 +70,7 @@ namespace NuistSmart
 
              services.AddTransient<NewsViewModel>();
              services.AddTransient<ChatViewModel>();
+             services.AddTransient<CalendarViewModel>();
              services.AddSingleton<ShellViewModel>();
 
              // Library Module

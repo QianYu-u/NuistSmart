@@ -1,10 +1,12 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NuistSmart.Services;
+using NuistSmart.Models;
 using Microsoft.UI.Dispatching;
 
 namespace NuistSmart.ViewModels
@@ -41,6 +43,12 @@ namespace NuistSmart.ViewModels
         [ObservableProperty]
         private bool _isNotProcessing = true;
 
+        [ObservableProperty]
+        private bool _isLoadingBuses;
+
+        [ObservableProperty]
+        private bool _hasBusesLoaded;
+
         partial void OnIsProcessingChanged(bool value)
         {
             IsNotProcessing = !value;
@@ -48,12 +56,12 @@ namespace NuistSmart.ViewModels
 
         public ObservableCollection<string> Logs { get; } = new ObservableCollection<string>();
 
+        public ObservableCollection<BusRunDisplay> AvailableBuses { get; } = new ObservableCollection<BusRunDisplay>();
+
         public ObservableCollection<string> StationList { get; } = new ObservableCollection<string>
         {
             "金牛湖尚学楼",
-            "本部文德楼",
-            "金牛湖校区",
-            "盘城"
+            "本部文德楼"
         };
 
         public BusViewModel(TokenCaptureService tokenCaptureService, BusService busService)
@@ -94,9 +102,97 @@ namespace NuistSmart.ViewModels
         }
 
         [RelayCommand]
+        public async Task GetAvailableBusesAsync()
+        {
+            if (IsLoadingBuses) return;
+
+            IsLoadingBuses = true;
+            
+            try
+            {
+                AddLog("=== 开始获取班次列表 ===");
+                
+                string token = UserToken?.Trim() ?? "";
+                
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    AddLog("错误: 请先输入 Token 或启动抓包获取 Token");
+                    return;
+                }
+
+                var busList = await _busService.GetBusListAsync(
+                    token,
+                    TargetStart,
+                    TargetEnd,
+                    TargetDate,
+                    AddLog,
+                    CancellationToken.None
+                );
+
+                _dispatcherQueue?.TryEnqueue(() =>
+                {
+                    AvailableBuses.Clear();
+                    foreach (var bus in busList)
+                    {
+                        var display = new BusRunDisplay
+                        {
+                            Id = bus.Id.ToString(),
+                            DepartureTime = bus.DepartureTime ?? "",
+                            RemainSeats = bus.Remain,
+                            Start = bus.Start ?? "",
+                            End = bus.End ?? "",
+                            DisplayText = $"{bus.DepartureTime} (余票:{bus.Remain})",
+                            IsSelected = false
+                        };
+                        AvailableBuses.Add(display);
+                    }
+                });
+
+                HasBusesLoaded = AvailableBuses.Count > 0;
+                AddLog($"=== 获取完成，共 {AvailableBuses.Count} 个班次 ===");
+            }
+            catch (Exception ex)
+            {
+                AddLog($"获取班次失败: {ex.Message}");
+            }
+            finally
+            {
+                IsLoadingBuses = false;
+            }
+        }
+
+        [RelayCommand]
+        public void SelectAllBuses()
+        {
+            foreach (var bus in AvailableBuses)
+            {
+                bus.IsSelected = true;
+            }
+            AddLog($"已全选 {AvailableBuses.Count} 个班次");
+        }
+
+        [RelayCommand]
+        public void ClearSelection()
+        {
+            foreach (var bus in AvailableBuses)
+            {
+                bus.IsSelected = false;
+            }
+            AddLog("已取消所有选择");
+        }
+
+        [RelayCommand]
         public async Task StartProcessAsync()
         {
             if (IsProcessing) return;
+
+            var selectedBuses = AvailableBuses.Where(b => b.IsSelected).ToList();
+            
+            if (selectedBuses.Count == 0)
+            {
+                AddLog("错误: 请先获取班次并选择要抢的班次");
+                return;
+            }
 
             IsProcessing = true;
             _cancellationTokenSource = new CancellationTokenSource();
@@ -123,14 +219,16 @@ namespace NuistSmart.ViewModels
 
                 if (!string.IsNullOrEmpty(token))
                 {
-                    AddLog("顺利拿到系统级别校验 Token，准备转入全自动抢票轮询阶段");
+                    var busIds = selectedBuses.Select(b => b.Id).ToList();
+                    AddLog($"顺利拿到系统级别校验 Token，准备监控 {busIds.Count} 个班次:");
+                    foreach (var bus in selectedBuses)
+                    {
+                        AddLog($"  - {bus.DisplayText}");
+                    }
+                    
                     await _busService.StartPollingAsync(
                         token,
-                        TargetStart,
-                        TargetEnd,
-                        TargetDate,
-                        TargetSpecificTime,
-                        TargetHourRange,
+                        busIds,
                         AddLog,
                         _cancellationTokenSource.Token
                     );

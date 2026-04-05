@@ -98,17 +98,17 @@ namespace NuistSmart.ViewModels
             {
                 Debug.WriteLine("[ShellViewModel] 开始更新校历数据...");
                 
-                var holidays = await _calendarService.FetchHolidaysAsync();
+                var calendarData = await _calendarService.FetchCalendarAsync();
                 
-                if (holidays.Count > 0)
+                if (calendarData != null && calendarData.SchoolYearData != null)
                 {
-                    Debug.WriteLine($"[ShellViewModel] 获取到 {holidays.Count} 条假期数据，准备保存...");
-                    _dbService.SaveHolidays(holidays);
+                    Debug.WriteLine($"[ShellViewModel] 获取到 {calendarData.SchoolYearData.XN} 学年数据，准备保存...");
+                    _dbService.SaveCalendarData(calendarData);
                     Debug.WriteLine("[ShellViewModel] 校历数据更新完成");
                 }
                 else
                 {
-                    Debug.WriteLine("[ShellViewModel] 未获取到假期数据");
+                    Debug.WriteLine("[ShellViewModel] 未获取到校历数据");
                 }
             }
             catch (System.Exception ex)
