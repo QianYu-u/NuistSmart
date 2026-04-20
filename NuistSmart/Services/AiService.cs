@@ -89,7 +89,7 @@ public class AiService
                     new { role = "system", content = SystemPrompt },
                     new { role = "user", content = userMessage }
                 },
-                max_tokens = 1024,
+                max_tokens = 8192,
                 temperature = 0.3
             };
 
@@ -115,6 +115,11 @@ public class AiService
                 choices.GetArrayLength() > 0)
             {
                 var firstChoice = choices[0];
+                // 记录 finish_reason 用于调试截断问题
+                if (firstChoice.TryGetProperty("finish_reason", out var finishReason))
+                {
+                    Debug.WriteLine($"[AiService] finish_reason: {finishReason.GetString()}");
+                }
                 if (firstChoice.TryGetProperty("message", out var message) &&
                     message.TryGetProperty("content", out var answerContent))
                 {
@@ -152,7 +157,7 @@ public class AiService
             {
                 model = ModelName,
                 messages = messages,
-                max_tokens = 1024,
+                max_tokens = 8192,
                 temperature = 0.3
             };
 
@@ -178,6 +183,11 @@ public class AiService
                 choices.GetArrayLength() > 0)
             {
                 var firstChoice = choices[0];
+                // 记录 finish_reason 用于调试截断问题
+                if (firstChoice.TryGetProperty("finish_reason", out var finishReason))
+                {
+                    Debug.WriteLine($"[AiService] finish_reason: {finishReason.GetString()}");
+                }
                 if (firstChoice.TryGetProperty("message", out var message) &&
                     message.TryGetProperty("content", out var answerContent))
                 {

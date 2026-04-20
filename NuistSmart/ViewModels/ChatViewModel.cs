@@ -190,8 +190,10 @@ namespace NuistSmart.ViewModels
                 var contextBuilder = new StringBuilder();
                 if (recentNews.Count > 0)
                 {
-                    contextBuilder.AppendLine("【近期校园公告列表】");
-                    foreach (var news in recentNews)
+                    // 限制公告数量，避免上下文过大导致 API 截断响应
+                    var limitedNews = recentNews.Take(50).ToList();
+                    contextBuilder.AppendLine($"【近期校园公告列表（最近{limitedNews.Count}条）】");
+                    foreach (var news in limitedNews)
                     {
                         contextBuilder.AppendLine($"- [{news.Date}] {news.Title}");
                     }
@@ -237,14 +239,11 @@ namespace NuistSmart.ViewModels
                 var messagesList = new List<object>();
                 messagesList.Add(new { role = "system", content = systemPrompt });
 
-                // 添加历史对话
+                // 添加历史对话（已包含当前用户消息，因为已在上方保存到数据库）
                 foreach (var msg in recentMessages)
                 {
                     messagesList.Add(new { role = msg.Role, content = msg.Content });
                 }
-
-                // 添加当前用户问题
-                messagesList.Add(new { role = "user", content = currentQuery });
 
                 System.Diagnostics.Debug.WriteLine($"[ChatViewModel] 发送上下文对话，消息数: {messagesList.Count}");
 
