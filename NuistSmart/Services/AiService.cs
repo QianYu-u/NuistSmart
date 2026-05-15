@@ -15,9 +15,9 @@ public class AiService
     // ============================================================
     // 👇 在这里填入你的真实配置
     // ============================================================
-    private const string ApiKey = "AIzaSyC0Y-aodxArCktuCuy_FE3f-jFtjKUCpdY";
+    private const string ApiKey = " ";
     private const string Endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-    private const string ModelName = "gemini-3-flash-preview";
+    private const string ModelName = "gemini-flash-latest";
     // ============================================================
 
     private readonly HttpClient _httpClient;
