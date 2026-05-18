@@ -9,7 +9,7 @@
 
   <Identity
     Name="7b7a17c7-1efe-43af-8143-2f9032762d76"
-    Publisher="CN=death"
+    Publisher="CN=Yu"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="7b7a17c7-1efe-43af-8143-2f9032762d76" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
